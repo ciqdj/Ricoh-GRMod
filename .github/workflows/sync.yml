@@ -1,0 +1,23 @@
+name: Sync Fork
+
+on:
+  schedule:
+    # 每天 UTC 时间 0:00（北京时间 8:00）自动运行一次
+    - cron: '0 0 * * *'
+  # 支持在 GitHub 页面手动点击触发
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+
+      - name: Sync Upstream
+        uses: a2b-actions/sync-upstream@v1
+        with:
+          upstream_repo: 'Maxwooow/Ricoh-GRMod'
+          upstream_branch: 'main'
+          target_branch: 'main'
+          git_pull_args: '--rebase'
