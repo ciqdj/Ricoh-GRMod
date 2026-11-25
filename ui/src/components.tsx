@@ -46,10 +46,25 @@ export const Ico = {
   soft: <svg viewBox="0 0 20 20" {...P}><circle cx="10" cy="10" r="3.3" /><circle cx="10" cy="10" r="7.2" strokeDasharray="1.4 2.35" /></svg>,
   date: <svg viewBox="0 0 20 20" {...P}><rect x="2.8" y="4.4" width="14.4" height="12" rx="2" /><path d="M2.8 8.2h14.4M6.6 2.8v3M13.4 2.8v3M6.4 11.4h1.6M9.2 11.4h1.6M12 11.4h1.6M6.4 13.8h1.6M9.2 13.8h1.6" /></svg>,
   adj: <svg viewBox="0 0 20 20" {...P}><rect x="1.8" y="6.6" width="3.4" height="3.4" rx="0.8" /><rect x="6.4" y="6.6" width="3.4" height="3.4" rx="0.8" /><rect x="11" y="6.6" width="3.4" height="3.4" rx="0.8" /><rect x="15.6" y="6.6" width="2.6" height="3.4" rx="0.8" /><path d="M3.5 13.4h13" /></svg>,
+  lamp: <svg viewBox="0 0 20 20" {...P}><circle cx="10" cy="10" r="3.2" /><path d="M10 2.6v2M10 15.4v2M2.6 10h2M15.4 10h2M4.8 4.8l1.4 1.4M13.8 13.8l1.4 1.4M4.8 15.2l1.4-1.4M13.8 6.2l1.4-1.4" /></svg>,
   flash: <svg viewBox="0 0 20 20" {...P}><path d="M11.8 2.6L5.4 11h4.2l-1.8 6.4 6.8-8.8h-4.4l1.6-6z" /></svg>,
   hdr: <svg viewBox="0 0 20 20" {...P}><circle cx="10" cy="10" r="3.2" /><path d="M10 2.2v2.2M10 15.6v2.2M2.2 10h2.2M15.6 10h2.2M4.5 4.5l1.6 1.6M13.9 13.9l1.6 1.6M4.5 15.5l1.6-1.6M13.9 6.1l1.6-1.6" /></svg>,
   battery: <svg viewBox="0 0 20 20" {...P}><rect x="4.2" y="6" width="13" height="8" rx="1.6" /><path d="M2.6 8.6v2.8" /><path d="M7.4 8.4v3.2M10 8.4h1.8v3.2H10zM14.6 8.4l-1.2 3.2" strokeWidth="1.1" /></svg>,
+  extras: <svg viewBox="0 0 20 20" {...P}><rect x="2.6" y="3.2" width="14.8" height="5.6" rx="2.8" /><circle cx="14.6" cy="6" r="1.5" fill="currentColor" stroke="none" /><rect x="2.6" y="11.2" width="14.8" height="5.6" rx="2.8" /><circle cx="5.4" cy="14" r="1.5" /></svg>,
   grid: <svg viewBox="0 0 20 20" {...P}><rect x="2.8" y="4.2" width="14.4" height="11.6" rx="1.6" /><path d="M7.6 4.2v11.6M12.4 4.2v11.6M2.8 8.1h14.4M2.8 11.9h14.4" /></svg>,
+  /* a tone curve lifted in the shadows */
+  shadow: <svg viewBox="0 0 20 20" {...P}><rect x="2.8" y="2.8" width="14.4" height="14.4" rx="2" /><path d="M5 15C6.4 9.6 9.6 6.6 15 5" /><path d="M5 15l10-10" strokeDasharray="1.2 2" /></svg>,
+  /* film grain: dots of a few sizes */
+  grain: <svg viewBox="0 0 20 20" {...P}><rect x="2.8" y="2.8" width="14.4" height="14.4" rx="2" /><circle cx="6.6" cy="6.8" r="1" fill="currentColor" stroke="none" /><circle cx="12.2" cy="5.9" r="0.6" fill="currentColor" stroke="none" /><circle cx="9.6" cy="10.2" r="1.4" fill="currentColor" stroke="none" /><circle cx="14" cy="11.4" r="0.8" fill="currentColor" stroke="none" /><circle cx="6.2" cy="13.4" r="0.7" fill="currentColor" stroke="none" /><circle cx="11.6" cy="14.4" r="0.9" fill="currentColor" stroke="none" /></svg>,
+  /* a movie camera with a focus frame */
+  movie: <svg viewBox="0 0 20 20" {...P}><rect x="2" y="5.6" width="11" height="8.8" rx="1.6" /><path d="M13 8.8l4.6-2.4v7.2L13 11.2" /><path d="M5.6 8.4v-.8h.8M9.4 7.6h.8v.8M10.2 11.6v.8h-.8M6.4 12.4h-.8v-.8" /></svg>,
+  movie4k: <svg viewBox="0 0 20 20" {...P}><rect x="2" y="5.6" width="11" height="8.8" rx="1.6" /><path d="M13 8.8l4.6-2.4v7.2L13 11.2" /><path d="M5.9 8.2L4.4 10.6h2.4M6.2 9.6v2.3M8.5 8.2v3.7M10.7 8.2L8.6 10.2l2.2 1.7" strokeWidth="1.15" /></svg>,
+  movieSr: <svg viewBox="0 0 20 20" {...P}><rect x="2" y="5.6" width="11" height="8.8" rx="1.6" /><path d="M13 8.8l4.6-2.4v7.2L13 11.2" /><rect x="6" y="8.5" width="3" height="3" rx="0.5" strokeWidth="1.15" /><path d="M4.5 8.3q-.8 1.7 0 3.4M10.5 8.3q.8 1.7 0 3.4" strokeWidth="1.15" /></svg>,
+  /* a tape measure's scale */
+  units: <svg viewBox="0 0 20 20" {...P}><rect x="2" y="6.2" width="16" height="7.6" rx="1.4" /><path d="M5 6.2v3M8 6.2v2M11 6.2v3M14 6.2v2" /></svg>,
+  shift: <svg viewBox="0 0 20 20" {...P}><rect x="2.6" y="3.8" width="11.4" height="8.6" rx="1.2" strokeDasharray="1.7 1.7" /><rect x="6" y="7.6" width="11.4" height="8.6" rx="1.2" /></svg>,
+  movieExp: <svg viewBox="0 0 20 20" {...P}><rect x="2" y="5.6" width="11" height="8.8" rx="1.6" /><path d="M13 8.8l4.6-2.4v7.2L13 11.2" /><path d="M4.6 10h2.6M5.9 8.7v2.6M8.4 10h2.4" /></svg>,
+  wb: <svg viewBox="0 0 20 20" {...P}><circle cx="10" cy="10" r="6.6" /><path d="M10 3.4a6.6 6.6 0 0 0 0 13.2z" fill="currentColor" stroke="none" opacity="0.35" /><path d="M10 3.4v13.2" /></svg>,
   preview: <svg viewBox="0 0 20 20" {...P}><path d="M1.8 10c2.2-3.6 5-5.4 8.2-5.4s6 1.8 8.2 5.4c-2.2 3.6-5 5.4-8.2 5.4S4 13.6 1.8 10z" /><circle cx="10" cy="10" r="2.6" /></svg>,
   mono: <svg viewBox="0 0 20 20" {...P}><circle cx="10" cy="10" r="7.2" /><path d="M10 2.8a7.2 7.2 0 0 1 0 14.4z" fill="currentColor" stroke="none" /></svg>,
   help: <svg viewBox="0 0 20 20" {...P}><circle cx="10" cy="10" r="7.2" /><path d="M7.9 8a2.2 2.2 0 1 1 3.3 1.9c-.8.5-1.2 1-1.2 1.8" /><circle cx="10" cy="13.9" r="0.6" fill="currentColor" /></svg>,
@@ -61,9 +76,39 @@ export function Switch({ checked, onChange, label }: { checked: boolean; onChang
   return <button type="button" role="switch" aria-checked={checked} aria-label={label} className={`switch ${checked ? 'on' : ''}`} onClick={() => onChange(!checked)}><i /></button>;
 }
 
-export function Segmented<T extends string>({ value, options, onChange, tour, className }: { value: T; options: { value: T; label: ReactNode; title?: string }[]; onChange: (v: T) => void; tour?: string; className?: string }) {
+/**
+ * A choice of a few values in one row. The chosen one is marked by a pill that slides to it (placed over the
+ * button it marks; without the pill, before the first layout, the button shows the same mark itself). `still`:
+ * the pill jumps (the editing controls of the custom grid's page, where nothing moves).
+ */
+export function Segmented<T extends string>({ value, options, onChange, tour, className, still }: { value: T; options: { value: T; label: ReactNode; title?: string }[]; onChange: (v: T) => void; tour?: string; className?: string; still?: boolean }) {
+  const box = useRef<HTMLDivElement>(null);
+  const pill = useRef<HTMLSpanElement>(null);
+  const place = (): void => {
+    const b = box.current; const p = pill.current;
+    if (!b || !p) return;
+    const on = b.querySelector<HTMLElement>(':scope > button.on');
+    if (!on || !on.offsetWidth) { b.classList.remove('piled'); return; }
+    p.style.width = `${on.offsetWidth}px`;
+    p.style.height = `${on.offsetHeight}px`;
+    p.style.transform = `translate(${on.offsetLeft}px, ${on.offsetTop}px)`;
+    b.classList.add('piled');
+  };
+  useLayoutEffect(place);
+  // without a movement when it is first placed and when the row changes its size (a language, a window)
+  useLayoutEffect(() => {
+    const b = box.current; const p = pill.current;
+    if (!b || !p) return undefined;
+    const fixed = (): void => { p.classList.add('still'); place(); if (!still) requestAnimationFrame(() => p.classList.remove('still')); };
+    const frame = still ? 0 : requestAnimationFrame(() => p.classList.remove('still'));
+    let first = true;
+    const ro = new ResizeObserver(() => { if (first) { first = false; return; } fixed(); });
+    ro.observe(b);
+    return () => { cancelAnimationFrame(frame); ro.disconnect(); };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
-    <div className={className ? `seg ${className}` : 'seg'} role="tablist" data-tour={tour}>
+    <div className={className ? `seg ${className}` : 'seg'} role="tablist" data-tour={tour} ref={box}>
+      <span className="seg-pill still" ref={pill} aria-hidden />
       {options.map((o) => (
         <button key={o.value} role="tab" aria-selected={o.value === value} title={o.title} aria-label={o.title} className={o.value === value ? 'on' : ''} onClick={() => onChange(o.value)}>{o.label}</button>
       ))}
@@ -534,7 +579,7 @@ export function ConfirmDialog() {
   if (!c) return null;
   return (
     <div className="overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) answerConfirm(false); }}>
-      <div className="dialog" role="alertdialog" aria-modal="true">
+      <div className="dialog confirm" role="alertdialog" aria-modal="true">
         <h3>{c.title}</h3>
         {c.lines.length > 0 && <ul className={`dialog-lines ${c.warn ? '' : 'last'}`}>{c.lines.map((l) => (isMobile ? <SwipeLine key={l} text={l} /> : <li key={l}>{l}</li>))}</ul>}
         {c.warn && <p className="dialog-warn">{c.warn}</p>}

@@ -1,10 +1,19 @@
+import { de } from './locales/de';
+import { es } from './locales/es';
+import { ja } from './locales/ja';
+import { ko } from './locales/ko';
+import { zhTW } from './locales/zh-TW';
+
 const zh = {
   app: 'GR Mod',
   navIC: '影像控制', navWall: '结束画面', navCopies: '固件副本',
+  navExtras: '附加功能', gridEdit: '编辑网格线', brightAutoSub: '户外显示设定为自动时，室内光线下显示屏更亮', monoToExtras: '转到附加功能',
   /** The phone's tab bar with five tabs (GR IV): shorter names where the full ones do not fit. */
-  navICTab: '影像控制', navRatioTab: '长宽比', navWallTab: '结束画面',
+  navICTab: '影像控制', navRatioTab: '长宽比', navExtrasTab: '附加功能', navWallTab: '结束画面',
   navRatio: '长宽比', ratioAdd: '添加比例', ratioFactory: '原厂', ratioGray: '灰色', ratioMax: '最多 {n} 个', ratioLine: '新增长宽比 {n}  ·  {l}',
-  ratioLive: '取景画面：照片范围外', ratioLiveTip: '使用新增比例拍摄时，显示屏上照片范围外的部分有多暗。100% 只显示照片范围，与以前相同；50% 和 25% 保留完整的 3:2 画面，照片范围外调暗（黑色 50%，灰色 25%）。照片本身不变。', ratioShadeLine: '取景画面：照片范围外 {p}', ratioLiveChip: '取景画面',
+  ratioLive: '遮幅亮度', ratioLiveTip: '设定使用新增比例拍摄时，显示屏上照片范围以外区域的亮度。100% 仅显示照片范围，与原有效果相同；50% 和 25% 保留完整的 3:2 画面，并降低照片范围以外区域的亮度（50% 为黑色，25% 为灰色）。照片本身不受影响。', ratioShadeLine: '遮幅亮度 {p}', ratioLiveChip: '遮幅亮度',
+  shadeInCamera: '在照相机内选择',
+  ratioLiveMenuTip: '遮幅亮度可在照相机[拍摄菜单] › [遮幅亮度]中更改。',
   ratioBad: '无法识别', ratioIsFactory: '与原厂比例重复', ratioPortrait: '仅支持横向比例（长:宽）。竖拍时，请将照相机竖直握持。', ratioExtreme: '长宽比过小', ratioQuick: '重播不支持此比例', ratioMetering: '测光不支持此比例', ratioConflict: '与其他比例冲突', ratioDup: '比例重复',
   ratioNameBad: '仅可输入英文字母、数字和符号', ratioNameLong: '名称超过可输入的长度', ratioPlaceholder: '长：宽',
   copiesCardTab: '存储卡', copiesPcTab: '电脑', copiesPc: '电脑上的备份', copiesEmptyCard: '此存储卡中没有已移开的文件', copiesEmptyPc: '尚无备份', copiesAll: '全选',
@@ -48,18 +57,18 @@ const zh = {
   writeCard: '写入存储卡', exportFolder: '自定义导出目录', pickFolder: '选择导出位置', eject: '弹出', reveal: '打开位置',
   roleFirmware: '固件卡', roleWallpaper: '旧版结束画面卡', roleMixed: '固件 + 旧版结束画面', roleEmpty: '空', roleOther: '（空白）',
   building: '正在生成固件…', writing: '正在写入…', verifying: '正在校验…',
-  written: '已写入 {p}', exported: '已导出到 {p}', verifyFailed: '写入后校验结果不一致', ejected: '已弹出存储卡',
+  written: '已写入 {p}', exported: '已导出至 {p}', verifyFailed: '写入后校验结果不一致', ejected: '已弹出存储卡',
   confirmTitle: '写入固件', confirmOk: '写入', nothingToDo: '没有需要写入的更改',
   resetConfirmTitle: '写入原厂固件', resetConfirmOk: '已重设照相机设定，写入原厂固件',
   resetNoteTitle: '恢复原厂固件前，请先重设照相机设定', resetNoteBody: '原厂固件无法识别使用 GR Mod 固件时设定的新增槽位、新增长宽比、ADJ 拨杆上的柔焦和拍摄时间戳等内容，可能导致菜单无响应或无法正常使用。',
-  resetNotePath: '照相机菜单 › [设定]（扳手）› [重设] › [重设为出厂默认设置]',
+  resetNotePath: '照相机菜单 › [设定]（扳手）› [重设] › [重设为出厂默认设定]',
   hostMissing: '请通过 GR Mod 程序打开。', error: '发生错误',
   slotCY: 'Cinema (Yellow)', slotCG: 'Cinema (Green)',
   modelGR3X_HDF: 'GR IIIx HDF', modelGR3_HDF: 'GR III HDF', modelGR3X: 'GR IIIx', modelGR3: 'GR III', fwCannotBuild: '此固件文件无法用于写入新功能', gr3xPreview: 'ADJ 长宽比 · 最多新增 7 个', gr3xIntro: '通过 ADJ 菜单切换长宽比。RAW 保留完整的 6000×4000 画面，JPEG 与机内预览随长宽比变化。默认七项均经过照相机实测，菜单顺序与实测时相同。更改后的列表在照相机菜单中先排列 3:2、1:1，其后按下列顺序排列。', gr3xError: '照片比例误差', gr3xOperation: '照相机操作：先在 ADJ 模式设定中分配长宽比槽位，再按 ADJ → [长宽比] → 选择比例。可新增 1～7 个比例，范围为 1:2～3:1，名称最多 12 个英文字符。3:4～17:6 已经过照相机实测，超出此范围的比例仅经过模拟器检查。', gr3xRatioReset: '恢复默认七项', gr3xRatioAdj: '在照相机[ADJ 模式设定]中为 ADJ 分配[长宽比]后，按 ADJ 选择比例。', gr3xNeedRatio: 'GR III / IIIx 至少需保留一个新增比例', gr3xCard: '请使用已在照相机中正常使用的 SD 卡，并保留照片备份。更新文件名为 {f}。',
   modelHDF: 'GR IV HDF', modelSTANDARD: 'GR IV', modelMONO: 'GR IV Monochrome',
   changes: '改动', parked: '已移开 {n} 个文件',
   monoNoSlots: 'Monochrome 机型没有这两个彩色槽位',
-  cardReqTitle: '存储卡要求', cardReq1: '首次写入固件前，请先在照相机内将存储卡格式化一次',
+  cardReqTitle: '存储卡要求', cardReq1: '首次写入固件前，请先使用照相机格式化存储卡。',
   tourNext: '下一步', tourBack: '上一步', tourDone: '完成', tourSkip: '跳过', tourSkipAll: '跳过指南', tourSkipAllTip: '结束本指南，其他指南也不再自动显示。可在[?]菜单中选择[重新显示全部使用指南]恢复。', tourReplay: '本页指南', tourHelp: '使用指南', tourRestart: '重新显示全部使用指南',
   tOvWelcomeBG3: '本应用程序可为理光 GR III / GR IIIx 增加影像控制、长宽比、柔焦、光晕、拍摄时间戳和自定义结束画面等功能。',
   tWallMenuBG3: '图片将写入固件。更新后，请在照相机的[设定] › [显示] › [结束画面] › [图片]中选择。',
@@ -77,7 +86,8 @@ const zh = {
   tOvLangT: '界面语言', tOvLangB: '选择 GR Mod 的显示语言。影像控制中更改的名称将应用于照相机菜单的同一语言；跟随系统时，使用与系统相同的照相机语言。',
   tOvIcT: '影像控制', tOvIcB: '可将 .xmp / .cube（基于 sRGB / Rec.709）预设导入照相机，并更改名称和图标。可将自定义预设用于 Cinema (Yellow) / Cinema (Green) 槽位；未导入预设时，恢复为照相机对应槽位的原厂预设。',
   tOvRatioT: '长宽比', tOvRatioB: '可在四个原厂比例之外新增自定义遮幅比例。',
-  tOvCombineT: '一并写入', tOvCombineB: '影像控制和长宽比页面中的更改可写入同一固件。分别完成更改后，在任一页面写入存储卡即可；此前的更改将保留。',
+  tOvExtrasT: '附加功能', tOvExtrasB: 'GR Mod 为照相机新增的功能（柔焦、时间戳、电量百分比、自定义网格线等）均列于本页。每项功能对应一张卡片，可分别开启或关闭。',
+  tOvCombineT: '一并写入', tOvCombineB: '影像控制、长宽比和附加功能页面中的更改写入同一固件。分别完成更改后，在任一页面写入存储卡即可；此前的更改将保留。',
   tOvWallT: '结束画面', tOvWallB: '最多可将 8 张自定义图片写入固件，并在照相机菜单中选择关闭电源时显示的图片。',
   tOvCopiesT: '固件副本', tOvCopiesB: '写入存储卡时移开的旧文件可在此处查看、备份、删除或重新写入存储卡。',
   tOvExportT: '自定义导出目录', tOvExportB: '将修改后的文件保存至所选文件夹。',
@@ -97,7 +107,7 @@ const zh = {
   tRatioFactoryT: '原厂比例', tRatioFactoryB: '新增比例排在原厂比例之后。',
   tRatioAddT: '添加比例', tRatioAddB: '新增一行，最多可添加 8 个比例。',
   tRatioCommonT: '常用比例', tRatioCommonB: '单击即可添加。',
-  tRatioLiveT: '取景画面：照片范围外', tRatioLiveB: 'GR IV：使用新增比例拍摄时，显示屏上照片范围外的部分有多暗。100% 只显示照片范围；50% 和 25% 保留完整的 3:2 画面，照片范围外调暗。照片本身不变。',
+  tRatioLiveT: '遮幅亮度', tRatioLiveB: '设定使用新增比例拍摄时，显示屏上照片范围以外区域（遮幅）的亮度。照相机固件 1.20 / 1.21：保留完整的 3:2 画面，遮幅亮度可在照相机[拍摄菜单] › [遮幅亮度]中更改（全黑 / 75% / 50% / 25% / 0%，默认 75%），此处按 75% 预览。固件 1.11：在此处设定，100% 仅显示照片范围，50% 和 25% 保留完整画面并降低外围亮度。照片本身不受影响。',
   tRatioRowT: '比例和名称', tRatioRowB: '左侧输入比例，中间输入照相机菜单中显示的名称，右侧显示当前长宽比下照片的最大分辨率。',
   tRatioBackdropT: '背景', tRatioBackdropB: '可在照片与纯灰背景之间切换。',
   tRatioFrameT: '取景范围', tRatioFrameB: '此处显示取景范围示例，也可拖入自己的照片。',
@@ -128,18 +138,45 @@ const zh = {
   softAdjSub: '拍摄后直接获得柔光滤光镜效果', softAdjLine: '柔焦  ·  ADJ 拨杆（关闭 / 弱 / 中 / 强）',
   softAdjMenuLine: '柔焦  ·  ADJ 拨杆和[拍摄菜单] › [影像处理设定] › [柔焦]（关闭 / 弱 / 中 / 强）',
   navPreview: '曝光预览开关', previewSub: '在照相机中选择实时显示是否随曝光设定改变亮度：开启 / 直闪模式时关闭 / 始终关闭（默认开启）。',
-  navBattery: '电量百分比', batterySub: '以 10% 为一档显示电量，代替电量格', batteryLine: '电量百分比  ·  以 10% 为一档', batteryChip: '电量 %', navBatteryPage: '电池', batteryLook: '照相机上的显示',
-  batteryNote: '数字以 10% 为一档，只有电量明显变化时才会改变。电量低于 5% 或使用 USB 供电时，显示照相机原来的图标。',
-  navGrid: '自定义网格线', gridSub: '选择照相机的 3x3 和 4x4 网格各画哪些线', grid3: '3x3 网格', grid4: '4x4 网格', gridHorizontal: '横线', gridVertical: '竖线', gridDiagonals: '对角线',
+  navBattery: '电量百分比', batterySub: '以 10% 为一档显示电量，代替电量格', batteryLine: '电量百分比  ·  以 10% 为一档', batteryChip: '电量 %',
+  navGrid: '自定义网格线', gridSub: '设定照相机 3x3 和 4x4 网格中显示的线', grid3: '3x3 网格', grid4: '4x4 网格', gridHorizontal: '横线', gridVertical: '竖线', gridDiagonals: '对角线',
   gridTop: '上', gridMiddle: '中', gridBottom: '下', gridLeft: '左', gridCentre: '中', gridRight: '右', gridDiagDown: '左上 → 右下', gridDiagUp: '左下 → 右上',
-  gridHint: '单击预览中的线或下方的按钮来显示或隐藏它；虚线是隐藏的线。在照相机上仍像以前一样选择 3x3 或 4x4 网格。', gridLine: '网格线  ·  3x3：{a}  ·  4x4：{b}', gridCameraLines: '与照相机相同', gridNoLines: '无', gridLinesN: '{n} 条线', gridChip: '网格线', navGridPage: '网格', gridSameAsCamera: '这些是照相机自己的线，所以不会添加任何内容。显示或隐藏任意一条线即可得到自己的网格。',
+  gridHint: '单击预览中的线或下方按钮，可显示或隐藏相应的线；虚线表示已隐藏的线。在照相机上仍按原方式选择 3x3 或 4x4 网格。', gridLine: '网格线  ·  3x3：{a}  ·  4x4：{b}', gridCameraLines: '与照相机相同', gridNoLines: '无', gridLinesN: '{n} 条线', gridChip: '网格线', gridSameAsCamera: '使用照相机原有的网格线，不添加其他内容。显示或隐藏任意一条线，即可自定义网格。',
+  gridSubMenu: '在照相机的[网格线种类]中增加自定义网格，并保留原厂的 9网格和 16网格',
+  frPreset: '网格 {n}', frPreviewAs: '预览画幅', frAdd: '添加', frKindFrame: '框线', frKindGrid: '等分网格', frKindGolden: '黄金分割', frKindLine: '单条线', frKindCentre: '中心标记', frKindDiagonals: '对角线', frFrame: '框线 {l}', frRatio: '比例', frCustom: '自定义', frSize: '大小', frMoveX: '水平位置', frMoveY: '垂直位置', frStyle: '样式', frBox: '完整框', frCorners: '四角', frDashed: '虚线', frSolid: '实线', frCorner: '角标长度', frMask: '框外遮罩', frNone: '无', frColour: '颜色', frWidth: '线宽', frCols: '列数', frRows: '行数', frWithin: '范围', frPicture: '画面', frLineKind: '线型', frAxis: '方向', frHorizontal: '横线', frVertical: '竖线', frPosition: '位置', frShape: '形状', frCross: '十字', frDot: '点', frPalette: '调色板', frOpacity: '不透明度', frReset: '恢复为原厂网格', frRemove: '删除', frEmpty: '这一组没有元素：在照相机中选用它时不显示任何线。', frTooMany: '这一组要画的线段太多（{n} 段，最多 {m} 段），请减少虚线、网格或安全框。', frSame: '与照相机原厂的{g}相同，不会在照相机中单独出现。', frHint: '在照相机的[网格线种类]中选择[自定义网格1]或[自定义网格2]。框线和网格会随照相机当前的画幅自动适配。', framingLine: '自定义网格线  ·  {n} 组',
+  frRatioFollow: '与范围相同', frCustomColour: '自定义', frColoursFull: '两组网格加起来最多只能用 8 种颜色，请改用已用过的颜色', frTemplates: '模板', frTplThirds: '三分法', frTplQuarters: '4×4 + 对角线', frTplCentre: '中心 + 安全框', frTplCinema: '电影 2.39:1', frTplFlat: '遮幅 1.85:1',
+  gridHintMenu: '单击预览中的线或下方按钮，可显示或隐藏相应的线；虚线表示已隐藏的线。在照相机[网格线种类]中，除原厂的 9网格和 16网格外，还将显示[自定义9网格]和[自定义16网格]（与原厂相同的网格不显示），可随时切换。使用新增长宽比时，网格线和对角线仅显示在照片范围内。',
   previewLine: '曝光预览  ·  [拍摄菜单] › [曝光设定] › [曝光预览]和 ADJ（开启 / 直闪模式时关闭 / 始终关闭）',
   previewLineNoFlash: '曝光预览  ·  [拍摄菜单] › [曝光设定] › [曝光预览]和 ADJ（开启 / 关闭）',
   navDate: '时间戳', dateSub: '将日期（可附加影像控制名称）打印在照片上', dateLine: '时间戳  ·  [拍摄辅助] › [拍摄时间戳]（\'26 10 08 / 2026.10.08 17:34，各可附加名称）',
   navAdjSlots: 'ADJ 栏目数', adjSlotsSub: '增加 ADJ 拨杆的栏目数量', adjSlotsLine: 'ADJ 栏目  ·  {n} 个（在[自定义设定] › [ADJ 模式设定]中设定）',
   navBrightAuto: '显示屏自动亮度', brightAutoOff: '自动亮度 · 原厂', brightAutoBalanced: '自动亮度 · 稍亮', brightAutoBright: '自动亮度 · 最亮',
+  navShadow: '改进版阴影校正', shadowSub: '阴影校正设为[自动]时，根据画面估计暗部提亮程度（原厂的[自动]因计算溢出，实拍时基本不进行校正）。固定档位和[关闭]保持不变。',
+  shadowLine: '阴影校正 · 学习型自动  ·  阴影校正选[自动]时生效',
+  navGrain: '颗粒效果', grainSub: '可选择原厂颗粒或优化的胶片颗粒：仅改变明暗，叠加多种大小的颗粒，中间调效果最明显，天空、肤色和深暗部效果较弱。',
+  grainLine: '胶片颗粒 · 优化  ·  影像控制的[颗粒效果]开启时生效（仅开启 / 关闭）', grainCamera: '原厂', grainMod: '优化',
+  navFlashTtl: '闪光 TTL', flashTtlSub: '安装 GF-2 并使用两种带[消减红眼]的闪光模式时，根据取景画面捕捉预闪的一帧设定主闪的闪光量（取代根据对焦距离设定的方式）；该帧不可用时，仍使用原厂闪光量。其他闪光模式和手动闪光量不受影响。',
+  flashTtlLine: '闪光 TTL  ·  GF-2，两个带[消减红眼]的闪光模式（预闪测光）',
+  navVideoAf: '视频相位对焦', videoAfSub: '录制影片时，使用传感器的相位数据直接驱动镜头，减少对焦时的拉风箱现象。', tIcFVafB: '录制影片时，使用传感器的相位数据直接驱动镜头：主体移动时，镜头直接移至目标对焦位置，减少反复对焦（拉风箱、画面呼吸）；相位数据可用时，照相机不再重新搜索，无可用相位数据时仍使用原厂对焦方式。录制期间未轻触屏幕时，对焦框为中央的小框；轻触屏幕后，对焦框仍按原方式移动。',
+  videoAfLine: '视频相位对焦  ·  录制影片时由相位数据驱动镜头以达到更快更准确地对焦效果',
+  navMovieExp: '视频模式曝光控制', movieExpSub: '影片不再固定以 P 模式录制：使用模式转盘选择的曝光模式（P / Av / Tv / M），可调整光圈、快门速度和 ISO 感光度。', tIcFMexpB: '录制影片时，使用模式转盘选择的曝光模式（P / Av / Tv / M 以及 U1–U3），不再固定为 P 模式。影片画面显示快门速度、光圈和 ISO 感光度，可使用拨盘和 ISO 按钮调整，操作方法与拍摄静态图像时相同；这些设定值与静态图像拍摄共用。最慢的快门速度受帧率限制（例如 60p 时为 1/60 秒）。在 M 模式下将快门速度设为 B / T 时，影片以 P 模式录制。模式转盘位于 P 且 ISO 感光度为 AUTO 时，曝光与原厂固件相同。照相机中没有此功能的菜单项目。',
+  movieExpLine: '视频模式曝光控制',
+  navAwb: '自动白平衡优化', awbSub: '自动白平衡优化使用学习型模型估计光源：减少户外偏冷和室内灯光下偏黄。', tIcFAwbB: '白平衡设为[自动]、[暖色优先]或[白色优先]时，使用基于带实测光源的公开数据集训练的模型估计光源，取代原厂估计：户外减少偏冷，室内灯光下减少偏黄。取景画面与照片使用相同的估计结果，使照片色彩与屏幕显示一致。三档仅在暖光下有所区别（[白色优先]不保留暖色，[自动]保留少量暖色，[暖色优先]保留较多暖色），户外三档相同。使用闪光灯拍摄的照片，以及预设和手动白平衡，仍使用原厂结果。',
+  awbLine: '自动白平衡优化  ·  白平衡[自动]、[暖色优先]、[白色优先]时生效（闪光照片用原厂结果）',
+  navLamp: '辅助灯常亮', lampSub: '忘带手电筒了？让相机正面的对焦辅助灯保持常亮！可在菜单中选择开启，也可加入ADJ模式列表或绑定为 Fn 快捷键。', tIcFLampB: '相机正面的对焦辅助灯（也是自拍定时灯）可以手动打开并保持常亮。拍摄菜单的[自动对焦辅助灯]下方会多出[辅助灯常亮]一项。可在菜单中选择开启，也可加入ADJ模式列表或绑定为 Fn 快捷键。',
+  lampLine: '辅助灯常亮',
+  navShift: '传感器位移', shiftSub: '通过防抖组件平移和旋转传感器从而微调构图；可加入ADJ模式列表或绑定为 Fn 快捷键。', tIcFShiftB: '相机的防抖组件可以移动传感器，[ADJ模式设定]的可选功能里会多出[传感器位移]一项；[Fn按钮设定]里，Fn 按钮和[长按影片按钮]的可选功能里也会多出这一项。调整期间，拍摄画面上快门速度、光圈和 ISO 的位置改为显示 X、Y、R：方向键平移传感器（每个方向 28 级，每级约 0.04 mm），拨盘旋转传感器（每个方向 18 级，每级 0.125°；旋转得越多，可平移的范围越小），按 DISP 回到中心，按 OK 或 Fn 结束调整并让传感器留在当前位置。调整期间以及传感器不在中心时，防抖功能关闭。关机后传感器回到中心。',
+  shiftLine: '传感器位移',
+  navMovie4k: '4K 视频', movie4kSub: '影片可以用 4K（3840×2160）录制，帧速率为 30p 或 24p；影片菜单的[帧速率]变为[帧速率 / 分辨率]。', tIcFMovie4kB: '影片菜单的[帧速率]一项变为[帧速率 / 分辨率]，进入后可分别设定：[帧速率]（60p / 30p / 24p）和[分辨率]（FHD / 4K）。4K 为 3840×2160，只能以 30p 或 24p 录制。4K 的视角比 FHD 窄（约 1.35 倍裁切）。同时加入[视频相位对焦]时，4K 录制没有相位数据，按相机原有的方式对焦。',
+  movie4kLine: '4K 视频',
+  navMovieSr: '视频模式传感器防抖', movieSrSub: '影片菜单的[Movie SR]变为三个选项：关闭、传感器防抖（菜单里写作“传感器SR”）、电子防抖（“电子SR”）。使用传感器防抖时将不裁切画面。', tIcFMovieSrB: '影片菜单的[Movie SR]由“关闭 / 开启”变为三个选项：[关闭]、[传感器SR]和[电子SR]。[传感器SR]像拍摄静态图像时一样移动传感器来稳定画面，不裁切画面；[电子SR]是相机原有的电子防抖，画面四周各裁去约 5%。',
+  movieSrLine: '视频模式传感器防抖',
+  navUnits: '距离单位', unitsSub: '[快拍对焦距离]和手动对焦时的距离刻度使用米（m）或英尺（ft）。', unitsMetre: '米 (m)', unitsFeet: '英尺 (ft)',
+  tIcFUnitsB: '选[英尺]时，[快拍对焦距离]的数值（1ft–16ft，菜单、拍摄画面和 ADJ 模式中都是）和手动对焦时的距离刻度改用英尺，近距离的刻度用英寸（in）。选[米]时和原厂相同。',
+  unitsLine: '距离单位  ·  英尺（快拍对焦距离、手动对焦刻度）',
   navHdr: 'HDR 增益图', hdrSub: '在 JPEG 中写入 HDR 增益图，使支持 HDR 的显示屏呈现更亮的高光', hdrLine: 'HDR 增益图  ·  JPEG 带增益图（[拍摄菜单] › [HDR]开关）',
-  navFlash: '直闪模式', flashSub: '闪光灯以固定功率闪光时，启用直闪模式可使照相机根据对焦距离和输入的闪光灯 GN 值设定曝光。', flashLine: '直闪模式  ·  闪光模式第 5 项（固定功率，按对焦距离曝光）',
+  navFlash: '闪光灯功能增强', flashSub: '直闪模式：闪光灯以固定功率闪光时，照相机根据对焦距离和输入的闪光灯 GN 值设定曝光。',
+  flashPlusSub: '直闪模式（固定功率闪光，根据对焦距离和 GN 值设定曝光）＋ 闪光 TTL（GF-2 在两种带[消减红眼]的闪光模式下使用预闪测光）。', flashLine: '直闪模式  ·  闪光模式第 5 项（固定功率，按对焦距离曝光）',
   navMono: '黑白预设', monoSub: '解锁 GR IV Monochrome 的影像控制风格', monoLine: '黑白预设  ·  解锁 GR IV Monochrome 的影像控制风格',
   extraTitle: '新增槽位', chkChanges: '{n} 项更改', chkCount: '{n} 个', chkPictures: '{n} 张', chkHidden: '隐藏 {n} 个', chkRatios: '新增长宽比', extraSub: '在 Cinema 之后增加影像控制槽位，最多 {n} 个', extraAdd: '新增槽位', extraCountLabel: '新增 {n} 个', extraNone: '不新增',
   prevSlot: '上一个槽位', nextSlot: '下一个槽位',
@@ -151,16 +188,19 @@ const zh = {
   lookOrderGr3Note: 'GR III：影片的影像控制列表原本不包含软单色和 HDR 色调。正在使用的风格被隐藏时，照相机将改用[标准]；自定义 1 / 2 中保存的风格不变。', lookOrderHiddenTag: '已隐藏', lookOrderMono: '单色', lookOrderCount: '{n} 个隐藏',
   icViews: '影像控制页面', icViewSlots: '影像控制', icViewOrder: '菜单顺序', lookOrderShown: '{n} 个显示', lookOrderMoved: '{name} 移至第 {n} 位', lookOrderDrag: '拖动以调整顺序',
   tIcViewsT: '槽位与菜单顺序', tIcViewsB: '[影像控制]用于设定各槽位；[菜单顺序]用于调整照相机影像控制菜单中 look 的顺序，也可隐藏不用的 look。',
-  tIcSoftT: '附加功能', tIcSoftB: '以下是 GR Mod 为照相机新增的功能。开启的功能将与其他更改一并写入固件；接下来逐项介绍。',
+  tIcSoftT: '附加功能', tIcSoftB: '以下列出 GR Mod 为照相机新增的功能，每项功能对应一张卡片。已开启的功能将与其他更改一并写入固件。以下逐项介绍。',
   tIcFSoftB: '开启后，可将[柔焦]添加至 ADJ 快捷菜单，提供关闭、弱、中、强四档。效果无法在实时显示中预览，可与 HDF 滤光镜同时使用；照相机固件 1.20 及以上也可在[拍摄菜单] › [影像处理设定] › [柔焦]中设定。',
   tIcFSoftBG3: '开启后，拍摄的照片直接获得柔光滤光镜效果。效果无法在实时显示中预览。',
   tIcFDateB: '在照片右下角打印日期（竖拍照片同样按观看时的右下角定位；关闭菜单中的[跟随照相机方向]后，按横向位置打印）。安装固件后默认为关闭，可在[拍摄辅助] › [拍摄时间戳]中开启，并选择两种样式。',
   tIcFMonoB: '解锁 GR IV Monochrome 机型的 6 个黑白风格；照相机固件 1.20 及以上还包括[中途曝光效果]。',
-  tIcFFlashB: '闪光灯以固定功率闪光时，照相机根据对焦距离和输入的闪光灯 GN 值设定曝光。',
+  tIcFFlashB: '直闪模式：在[闪光模式]中增加第 5 项。闪光灯以固定功率闪光时，照相机根据对焦距离和输入的闪光灯 GN 值设定曝光；GN、背景亮度和最慢快门速度在[闪光模式]子菜单的[直闪设置]中设定。闪光 TTL（照相机固件 1.20 / 1.21）：安装 GF-2 并选择[强制闪光+消减红眼（TTL）]或[低速同步+消减红眼（TTL）]时，根据取景画面捕捉预闪的一帧进行实测，以设定主闪的闪光量（取代根据对焦距离估算的方式）；无法准确测量时，使用照相机原有的闪光量。光圈、ISO 和闪光补偿仍正常工作，其他闪光模式和手动闪光量不变。',
+  tIcFShadowB: '阴影校正设为[自动]时，根据画面估计暗部提亮程度，最高相当于[强]档；原厂的[自动]因计算溢出，实拍时基本不进行校正。[弱 / 中 / 强 / 关闭]保持原有效果。估计结果来自使用修图师数据训练的小型模型，效果可在取景画面中查看。',
+  tIcFBatteryB: '照相机以百分比测量电池电量，但仅显示电量格；电量降至约一半前，电量格一直保持满格。开启后，拍摄和重播画面中的电池图标以 10% 为一档显示电量（20% 为黄色，10% 为红色）；仅在电量明显变化时更新数字。电量低于 5% 或使用 USB 供电时，显示照相机原有图标。',
+  tIcFGrainB: '设定影像控制的[颗粒效果]所使用的颗粒。原厂：使用照相机原有的颗粒。优化（照相机固件 1.20 / 1.21）：使用 GR Mod 的胶片颗粒，仅改变明暗，不改变颜色；叠加多种大小的柔和颗粒，中间调效果最明显，天空、肤色和深暗部效果较弱；每张照片的浓度自动设定。此时[颗粒效果]仅可开启或关闭，不再使用原厂强度和大小；[颗粒感单色]风格仍使用原厂颗粒。仅作用于 JPEG。',
   tIcFHdrB: '在 JPEG 中写入 HDR 增益图，在支持 HDR 的显示屏上查看时，高光部分更亮。可在[拍摄菜单] › [HDR]中开启或关闭。',
   tIcFPreviewB: '照相机固件 1.20 及以上：在[拍摄菜单] › [曝光设定] › [曝光预览]或 ADJ 中，选择实时显示是否随曝光设定改变亮度（开启 / 直闪模式时关闭 / 始终关闭）。',
-  tBatteryB: 'GR IV：照相机以百分比测量电量，但只显示电量格，而电量格在电量降到一半左右之前一直是满的。开启后，拍摄和回放画面上的电池图标显示电量，以 10% 为一档；只有电量明显变化时数字才会改变。电量低于 5% 或使用 USB 供电时，显示照相机原来的图标。',
-  tGridB: 'GR IV：选择照相机的 3x3 和 4x4 网格各画哪些线，每条线可单独开关。3x3 网格还可以加上中线和对角线。在照相机上仍像以前一样选择网格样式。',
+ 
+  tGridB: '自定义 3x3 和 4x4 网格中显示的线，每条线均可单独开启或关闭，3x3 网格还可添加中线和对角线。照相机固件 1.20 / 1.21：[网格线种类]中保留原厂的 9网格和 16网格，并增加[自定义9网格]和[自定义16网格]。固件 1.11：照相机的 3x3 和 4x4 直接使用自定义线。在任意长宽比（包括 1:1、4:3、16:9 和新增长宽比）下，网格线均显示在照片范围内。',
   tIcFAdjB: '将 ADJ 拨杆的栏目增加至所选数量，并可在照相机的[自定义设定] › [ADJ 模式设定]中设定每个栏目的功能。',
   tIcFBrightB: '照相机的户外显示设定为自动时，提高显示屏在室内光线下的亮度：[稍亮]适度提高，[最亮]进一步提高；最高亮度不变。',
   // Android
@@ -171,7 +211,7 @@ const zh = {
   pushWarn1: '照相机接收固件后将立即开始更新，并在完成后自动重启。', pushWarn2: '更新期间，请勿关闭照相机电源或取出电池。请保持 GR Mod 运行，并避免设备锁屏。',
   pushWarn3: '仅可推送与照相机当前基础版本相同的固件（例如 1.20 → 1.20）。照相机电池电量应高于 50%。',
   pushStart: '开始推送', pushStop: '停止', pushClose: '关闭', pushShareLog: '发送日志', pushRetry: '重试', pushDetails: '日志', pushPreparing: '正在准备文件…',
-  pushOnlyGr4: '无线推送仅支持 GR IV 系列。使用 GR III / IIIx 时，请存储到设备，再通过读卡器写入存储卡。',
+  pushOnlyGr4: '无线推送仅支持 GR IV 系列。使用 GR III / IIIx 时，请保存至设备，再通过读卡器写入存储卡。',
   pushVpn: '设备正在使用 VPN。推送前请关闭 VPN，或在 VPN 设定中允许 GR Mod 绕过 VPN。', pushPerm: '需要 Bluetooth® 和附近设备权限，才能查找照相机。',
   pushBtOff: '设备 Bluetooth® 未开启', mSettings: '设定', saveTitle: '存储到设备', rename: '重命名', saveStart: '存储', mWhatsNew: '更新内容', followSystem: '跟随系统', uiLanguage: '界面语言',
   // the phone app: where it differs from the desktop wording, the key + 'M' (t() picks it on the phone)
@@ -182,21 +222,21 @@ const zh = {
   tOvFirmwareBWG3: '选择正确的机型后，轻触此处可从理光官方网站下载固件，也可导入设备中已下载的固件。新版（GR III 2.21、2.20 / GR IIIx 1.71、1.70）和旧版（2.10 / 1.60）固件均可使用。照相机安装新版固件后，无法恢复至旧版。',
   tOvHelpBW: '如需再次查看操作方法，可轻触此处回顾本页指南，或重新显示全部指南。',
   tMSettingsT: '设定', tMSettingsB: '可在此处设定机型和界面语言，也可回顾使用指南。',
-  tOvCombineBM: '影像控制和长宽比页面中的更改可写入同一固件。分别完成更改后，在任一页面保存或推送即可；此前的更改将保留。',
+  tOvCombineBM: '影像控制、长宽比和附加功能页面中的更改写入同一固件。分别完成更改后，在任一页面保存或推送即可；此前的更改将保留。',
   tOvExportTM: '存储到设备', tOvExportBM: '生成固件并存储到所选位置，再通过读卡器写入存储卡。所有机型均可使用。',
   tOvWriteTM: '推送至照相机', tOvWriteBM: '通过 Bluetooth® 和无线局域网将固件直接推送至照相机并执行更新，无需使用存储卡。仅支持 GR IV 系列，且仅可推送与照相机当前基础版本相同的固件（例如 1.20 → 1.20）。',
   tOvHelpBM: '如需再次查看操作方法，可在设定中回顾本页指南，或重新显示全部指南。',
-  tIcStockBM: '可通过[⋯]菜单将原厂固件推送至照相机或存储到设备。',
-  tIcSlotBM: '轻触可自定义的预设槽位，在上方预览其效果。', tIcSlotBG3M: '可自定义的预设槽位，点击可选中当前槽位并在上方预览效果',
+  tIcStockBM: '可通过[⋯]菜单将原厂固件推送至照相机或保存至设备。',
+  tIcSlotBM: '轻触可自定义的预设槽位，在上方预览其效果。', tIcSlotBG3M: '轻触可自定义的预设槽位，在上方预览其效果。',
   tIcPresetBM: '轻触并选择 .xmp / .cube（基于 sRGB / Rec.709）文件后导入。',
   tIcTabsBM: '切换上方预览的槽位，效果与轻触下方卡片相同。',
   tIcPreviewBM: '可左右对比预览效果。拖动中间的分割线调整显示范围，或轻触画面将分割线移至该处；也可导入自己的照片。',
-  tIcWriteTM: '推送至照相机', tIcWriteBM: '生成固件并推送至照相机，照相机接收后自动更新；也可存储到设备，再通过读卡器写入存储卡。所有更改（包括结束画面）均写入同一固件。',
+  tIcWriteTM: '推送至照相机', tIcWriteBM: '生成固件并推送至照相机，照相机接收后自动更新；也可保存至设备，再通过读卡器写入存储卡。所有更改（包括结束画面）均写入同一固件。',
   tRatioFrameBM: '此处显示取景范围示例。可轻触右上角按钮，更换为自己的照片。',
   tWallMenuBM: '图片将写入固件。更新后，请在照相机的[设定] › [显示设定] › [结束画面] › [图片]中选择，无需开启工厂菜单。', tWallMenuBG3M: '图片将写入固件。更新后，请在照相机的[设定] › [显示] › [结束画面] › [图片]中选择。',
   tWallAddBM: '轻触添加图片，最多可添加 8 张。',
   tWallCardBM: '右上角可裁切或移除图片；下方名称显示在照相机菜单中（仅可使用英文字母、数字和符号）。',
-  tWallWriteTM: '推送至照相机', tWallWriteBM: '图片与其他页面的更改一并写入固件。推送至照相机，或存储到设备后更新。',
+  tWallWriteTM: '推送至照相机', tWallWriteBM: '图片与其他页面的更改一并写入固件。推送至照相机，或保存至设备后更新。',
   // Android: GR Mod's own updates (update-dialog.tsx)
   aUpdTitle: 'GR Mod {v} 可用', aUpdCurrent: '当前 {v}', aUpdErrorTitle: '更新', aUpdHint: '将从 GitHub 下载安装包，校验后交给系统安装。',
   aUpdLater: '以后再说', aUpdNow: '更新', aUpdDownloading: '正在下载… {a} / {b} MB', aUpdInstalling: '正在安装。请在系统画面中轻触[更新]。',
@@ -208,9 +248,12 @@ const zh = {
 const en: typeof zh = {
   app: 'GR Mod',
   navIC: 'Image Control', navWall: 'Power-off image', navCopies: 'Firmware copies',
-  navICTab: 'Image', navRatioTab: 'Ratio', navWallTab: 'Power-off',
+  navExtras: 'Additions', gridEdit: 'Edit the grid lines', brightAutoSub: 'With Outdoor View Setting on Auto, a brighter screen in indoor light', monoToExtras: 'Go to Additions',
+  navICTab: 'Image', navRatioTab: 'Ratio', navExtrasTab: 'Additions', navWallTab: 'Power-off',
   navRatio: 'Aspect ratio', ratioAdd: 'Add ratio', ratioFactory: 'Factory', ratioGray: 'Gray', ratioMax: 'At most {n}', ratioLine: 'Added aspect ratios {n}  ·  {l}',
-  ratioLive: 'Live view: outside the photo', ratioLiveTip: 'How dark the part outside the photo is on the screen while shooting with an added ratio. 100% shows the photo area only, as before. At 50% and 25% the whole 3:2 frame stays visible and the part outside the photo is darkened (black at 50%, gray at 25%). The photos are the same either way.', ratioShadeLine: 'Live view: outside the photo {p}', ratioLiveChip: 'Live view',
+  ratioLive: 'Matte brightness', ratioLiveTip: 'How dark the part outside the photo is on the screen while shooting with an added ratio. 100% shows the photo area only, as before. At 50% and 25% the whole 3:2 frame stays visible and the part outside the photo is darkened (black at 50%, gray at 25%). The photos are the same either way.', ratioShadeLine: 'Matte brightness {p}', ratioLiveChip: 'Matte',
+  shadeInCamera: 'set in the camera',
+  ratioLiveMenuTip: 'Matte brightness can be changed in the camera under Shooting › Matte Brightness.',
   ratioBad: 'Not a ratio', ratioIsFactory: 'Already a factory ratio', ratioPortrait: 'Must be wider than tall; turn the camera for upright pictures', ratioExtreme: 'Too narrow', ratioQuick: 'Playback cannot show it', ratioMetering: 'Metering cannot follow it', ratioConflict: 'Clashes with another ratio', ratioDup: 'Duplicate',
   ratioNameBad: 'Letters, digits and symbols only', ratioNameLong: 'Name too long', ratioPlaceholder: 'W:H',
   copiesCardTab: 'Card', copiesPcTab: 'Computer', copiesPc: 'Backups on this computer', copiesEmptyCard: 'Nothing has been moved aside on this card', copiesEmptyPc: 'No backups yet', copiesAll: 'Select all',
@@ -283,7 +326,8 @@ const en: typeof zh = {
   tOvLangT: 'App language', tOvLangB: 'The language of GR Mod. Names changed under Image Control are for the same language of the camera menu; following the system, for the camera language matching the system\'s.',
   tOvIcT: 'Image Control', tOvIcB: 'Import .xmp / .cube presets (sRGB / Rec.709) into the camera; names and icons can be changed. (Your presets can replace the camera\'s Cinema (Yellow) / Cinema (Green) slots; a slot left without a preset goes back to the camera\'s own preset for it.)',
   tOvRatioT: 'Aspect ratio', tOvRatioB: 'Add custom aspect ratios next to the four factory ones.',
-  tOvCombineT: 'Written together', tOvCombineB: 'What you set on the Image Control and Aspect ratio pages is written together: make the changes on each page, then write to the card from either page. Earlier changes are kept.',
+  tOvExtrasT: 'Additions', tOvExtrasB: 'The features GR Mod adds to the camera (soft focus, date imprint, battery percentage, custom grid lines and more), one card each, each switched on its own.',
+  tOvCombineT: 'Written together', tOvCombineB: 'What you set on the Image Control, Aspect ratio and Additions pages is written together: make the changes on each page, then write to the card from any of them. Earlier changes are kept.',
   tOvWallT: 'Power-off image', tOvWallB: 'Up to 8 of your own pictures go into the firmware; choose in the camera menu which one the camera shows when it switches off.',
   tOvCopiesT: 'Firmware copies', tOvCopiesB: 'Old files that were in the way of a write can be looked at, backed up, deleted or written back to the card here.',
   tOvExportT: 'Custom export folder', tOvExportB: 'Puts the modified files into the folder you choose.',
@@ -303,7 +347,7 @@ const en: typeof zh = {
   tRatioFactoryT: 'Factory ratios', tRatioFactoryB: 'Added ratios follow these.',
   tRatioAddT: 'Add ratio', tRatioAddB: 'A new row, 8 at most.',
   tRatioCommonT: 'Common ratios', tRatioCommonB: 'Click to add quickly.',
-  tRatioLiveT: 'Live view: outside the photo', tRatioLiveB: 'GR IV: how dark the part outside the photo is on the screen while shooting with an added ratio. 100% shows the photo area only; at 50% and 25% the whole 3:2 frame stays visible and the part outside the photo is darkened. The photos are the same either way.',
+  tRatioLiveT: 'Matte brightness', tRatioLiveB: 'How bright the part outside the photo (the matte) is on the screen while shooting with an added ratio. Camera firmware 1.20 / 1.21: the whole 3:2 frame stays visible; change it in the camera under Shooting › Matte Brightness (Black / 75% / 50% / 25% / 0%, 75% by default); the preview here shows 75%. Firmware 1.11: chosen here, 100% shows the photo area only, 50% and 25% keep the whole frame and darken the outside. The photos are the same either way.',
   tRatioRowT: 'Ratio and name', tRatioRowB: 'The ratio on the left, the name for the camera menu in the middle, the largest photo resolution at this ratio on the right.',
   tRatioBackdropT: 'Backdrop', tRatioBackdropB: 'Switch between the photo and a plain gray backdrop.',
   tRatioFrameT: 'Frame', tRatioFrameB: 'An example of what the frame covers; you can drop your own photo here.',
@@ -334,18 +378,45 @@ const en: typeof zh = {
   softAdjSub: 'A soft-focus filter look, straight out of camera', softAdjLine: 'Soft focus  ·  ADJ lever (off / low / medium / high)',
   softAdjMenuLine: 'Soft focus  ·  ADJ lever and Shooting › Image Process Settings › Soft Focus (off / low / medium / high)',
   navPreview: 'Exposure preview switch', previewSub: 'Choose in the camera whether the live view gets brighter and darker with the exposure set: On / Off in Direct Flash / Always Off (On by default).',
-  navBattery: 'Battery percentage', batterySub: 'Shows the charge in steps of 10% instead of the bars', batteryLine: 'Battery percentage  ·  in steps of 10%', batteryChip: 'Battery %', navBatteryPage: 'Battery', batteryLook: 'On the camera',
-  batteryNote: 'The number moves in steps of 10%, and only when the charge clearly changes. Below 5% and on USB power the camera shows its own icon.',
+  navBattery: 'Battery percentage', batterySub: 'Shows the charge in steps of 10% instead of the bars', batteryLine: 'Battery percentage  ·  in steps of 10%', batteryChip: 'Battery %',
   navGrid: 'Custom grid lines', gridSub: 'Choose which lines the camera\'s 3x3 and 4x4 grids draw', grid3: '3x3 Grid', grid4: '4x4 Grid', gridHorizontal: 'Horizontal', gridVertical: 'Vertical', gridDiagonals: 'Diagonals',
   gridTop: 'Top', gridMiddle: 'Middle', gridBottom: 'Bottom', gridLeft: 'Left', gridCentre: 'Center', gridRight: 'Right', gridDiagDown: 'Top left to bottom right', gridDiagUp: 'Bottom left to top right',
-  gridHint: 'Click a line in the preview, or its button, to show or hide it; dashed lines are hidden. On the camera, choose the 3x3 or 4x4 grid as before.', gridLine: 'Custom grid lines  ·  3x3: {a}  ·  4x4: {b}', gridCameraLines: 'as the camera', gridNoLines: 'none', gridLinesN: '{n} lines', gridChip: 'Grid', navGridPage: 'Grid', gridSameAsCamera: 'These are the camera\'s own lines, so nothing is added. Show or hide a line to make your own grid.',
+  gridHint: 'Click a line in the preview, or its button, to show or hide it; dashed lines are hidden. On the camera, choose the 3x3 or 4x4 grid as before.', gridLine: 'Custom grid lines  ·  3x3: {a}  ·  4x4: {b}', gridCameraLines: 'as the camera', gridNoLines: 'none', gridLinesN: '{n} lines', gridChip: 'Grid', gridSameAsCamera: 'These are the camera\'s own lines, so nothing is added. Show or hide a line to make your own grid.',
+  gridSubMenu: 'Adds your own grids to the camera\'s Grid Style list; its 3x3 and 4x4 grids stay',
+  frPreset: 'Grid {n}', frPreviewAs: 'Preview as', frAdd: 'Add', frKindFrame: 'Frame', frKindGrid: 'Grid', frKindGolden: 'Golden section', frKindLine: 'Line', frKindCentre: 'Center mark', frKindDiagonals: 'Diagonals', frFrame: 'Frame {l}', frRatio: 'Ratio', frCustom: 'Custom', frSize: 'Size', frMoveX: 'Horizontal position', frMoveY: 'Vertical position', frStyle: 'Style', frBox: 'Box', frCorners: 'Corners', frDashed: 'Dashed', frSolid: 'Solid', frCorner: 'Corner length', frMask: 'Outside', frNone: 'None', frColour: 'Color', frWidth: 'Width', frCols: 'Columns', frRows: 'Rows', frWithin: 'Within', frPicture: 'Picture', frLineKind: 'Line', frAxis: 'Direction', frHorizontal: 'Horizontal', frVertical: 'Vertical', frPosition: 'Position', frShape: 'Shape', frCross: 'Cross', frDot: 'Dot', frPalette: 'Palette', frOpacity: 'Opacity', frReset: "Back to the camera's grid", frRemove: 'Remove', frEmpty: 'Nothing here: with this grid chosen, the camera shows no lines.', frTooMany: 'Too many pieces to draw ({n}, at most {m}): use fewer dashed lines, grids or safe areas.', frSame: "The same as the camera's {g}: it does not appear in the camera as a grid of its own.", frHint: "On the camera, choose Custom Grid 1 or Custom Grid 2 under Grid Style. Frame lines and grids fit the picture the camera shows.", framingLine: 'Custom grid lines  ·  {n} grids',
+  frRatioFollow: 'Same as area', frCustomColour: 'Custom', frColoursFull: 'Both grids together can use at most 8 colours; pick one already in use', frTemplates: 'Templates', frTplThirds: 'Rule of thirds', frTplQuarters: '4×4 + diagonals', frTplCentre: 'Center + safe area', frTplCinema: 'Cinema 2.39:1', frTplFlat: 'Flat 1.85:1',
+  gridHintMenu: 'Click a line in the preview, or its button, to show or hide it; dashed lines are hidden. In the camera\'s Grid Style list, Custom 3x3 Grid and Custom 4x4 Grid come after the camera\'s 3x3 and 4x4 (one that is the same as the camera\'s is left out); switch any time. With added ratios, the lines and diagonals stay in the photo area.',
   previewLine: 'Exposure preview  ·  Shooting › Exposure Settings › Exposure Preview and ADJ (On / Off in Direct Flash / Always Off)',
   previewLineNoFlash: 'Exposure preview  ·  Shooting › Exposure Settings › Exposure Preview and ADJ (On / Off)',
   navDate: 'Date imprint', dateSub: 'Print the date (and the look\'s name) on photos', dateLine: 'Date imprint  ·  Shooting Assist › Date Imprint (\'26 10 08 / 2026.10.08 17:34, each with or without the look\'s name)',
   navAdjSlots: 'ADJ lever items', adjSlotsSub: 'More items on the ADJ lever', adjSlotsLine: 'ADJ lever  ·  {n} items (set in Customize Settings › ADJ Mode Setting)',
   navBrightAuto: 'Auto screen brightness', brightAutoOff: 'Auto brightness · stock', brightAutoBalanced: 'Auto brightness · brighter', brightAutoBright: 'Auto brightness · brightest',
+  navShadow: 'Improved Shadow Correction', shadowSub: 'With Shadow Correction on Auto, the camera estimates from the scene how much to lift the shadows (its own Auto overflows and hardly ever corrects on real photos). The fixed levels and Off are unchanged.',
+  shadowLine: 'Shadow Correction · learned Auto  ·  when Shadow Correction is set to Auto',
+  navGrain: 'Grain Effect', grainSub: 'The camera\'s grain, or optimized film grain: on the brightness only, a few sizes, strongest in the midtones, fading out in sky, skin and deep shadows.',
+  grainLine: 'Film grain · optimized  ·  when Grain Effect is on in Image Control (on / off only)', grainCamera: 'Camera', grainMod: 'Optimized',
+  navFlashTtl: 'Flash TTL', flashTtlSub: 'With a GF-2 in the two flash modes with red-eye reduction, the live view frame that catches the pre-flash sets the main flash\'s output (in place of the focus distance); when that frame is not usable the camera\'s own output stays. The other flash modes and the manual output are not touched.',
+  flashTtlLine: 'Flash TTL  ·  GF-2, the two flash modes with red-eye reduction (pre-flash metering)',
+  navVideoAf: 'Phase Detect AF for Video', videoAfSub: 'While recording, the sensor\'s phase data drives the lens, with less focus hunting.', tIcFVafB: 'While recording, the sensor\'s phase data drives the lens: when the subject moves the lens goes there in a step, instead of searching back and forth (the image "breathing"); while that data is usable the camera does not start a new search, where it says nothing the camera\'s own search runs as before. While recording without a touch the focus area is one frame in the middle; a touch moves it as before.',
+  videoAfLine: 'Movie AF  ·  the lens driven by the phase data while recording (middle frame)',
+  navMovieExp: 'Exposure Control in Video Mode', movieExpSub: 'Movies are no longer always recorded in P: the mode dial\'s exposure mode (P / Av / Tv / M) is used, and aperture, shutter speed and ISO can be set.', tIcFMexpB: 'Movies are recorded in the exposure mode of the mode dial (P / Av / Tv / M and U1–U3) instead of always in P. The movie screen shows shutter speed, aperture and ISO; the dials and the ISO button change them as for stills, and the values are shared with still shooting. The slowest shutter speed depends on the frame rate (1/60 s at 60p, for example). In M with the shutter speed at B / T, movies are recorded in P. With the mode dial at P and ISO at AUTO the exposure is the same as with the official firmware. The camera has no menu item for this.',
+  movieExpLine: 'Exposure Control in Video Mode',
+  navAwb: 'Learned auto WB', awbSub: 'Auto white balance from a learned model of the light: not too cool outdoors, not too yellow under room lights.', tIcFAwbB: 'In Auto, Warmth Priority and White Priority white balance, the light is estimated by a model trained on public data sets with measured illuminants, in place of the camera\'s estimate: less cool than the camera\'s outdoors, less yellow under room lights. Live view and the picture share one estimate, so the picture has the colour the screen showed. The three modes differ only in warm light (White Priority leaves no warmth, Auto a little, Warmth Priority more); outdoors they are the same. Pictures taken with the flash, and the preset and manual white balances, keep the camera\'s own result.',
+  awbLine: 'Learned auto WB  ·  in Auto, Warmth Priority and White Priority white balance (flash pictures keep the camera\'s result)',
+  navLamp: 'Constant Light', lampSub: 'Forgot your flashlight? Keep the AF assist lamp on the front of the camera lit! Switch it on in the menu, add it to ADJ mode or assign it to an Fn button.', tIcFLampB: 'The AF assist lamp on the front of the camera (also the self-timer lamp) can be switched on by hand and stays lit. The shooting menu gets a line Constant Light below AF Assist Light. It can be switched on in the menu, added to ADJ mode or assigned to an Fn button.',
+  lampLine: 'Constant Light',
+  navShift: 'Sensor Shift', shiftSub: 'Shifts and turns the sensor with the shake reduction unit to fine-tune the framing; it can be added to ADJ mode or assigned to an Fn button.', tIcFShiftB: 'The shake reduction unit can move the sensor. ADJ Mode Setting offers Sensor Shift as a function; in Fn Button Setting, the Fn button and Hold Movie Button offer it too. During the adjustment the shooting screen shows X, Y and R in place of shutter speed, aperture and ISO: the four-way controller shifts the sensor (28 steps of about 0.04 mm each way), the dials turn it (18 steps of 0.125° each way; the more it is turned, the less it can be shifted), DISP brings it back to the centre, OK or Fn ends the adjustment and leaves the sensor where it is. Shake reduction is off during the adjustment and for as long as the sensor is away from the centre. The sensor is back at the centre after the camera is switched off.',
+  shiftLine: 'Sensor Shift',
+  navMovie4k: '4K Video', movie4kSub: 'Movies can be recorded in 4K (3840×2160) at 30p or 24p; the movie menu\'s Framerate becomes Framerate / Resolution.', tIcFMovie4kB: 'The movie menu\'s Framerate line becomes Framerate / Resolution, where the two are set separately: Framerate (60p / 30p / 24p) and Resolution (FHD / 4K). 4K is 3840×2160, at 30p or 24p only. The 4K picture is narrower than FHD (a crop of about 1.35x). With Phase Detect AF for Video also added, a 4K recording has no phase data and is focused the camera\'s own way.',
+  movie4kLine: '4K Video',
+  navMovieSr: 'Sensor-Shift SR in Video Mode', movieSrSub: 'The movie menu\'s Movie SR offers three settings: Off, Mechanical (sensor shift) and Electronic. Mechanical does not crop the picture.', tIcFMovieSrB: 'The movie menu\'s Movie SR offers three settings instead of Off / On: Off, Mechanical and Electronic. Mechanical steadies the picture by moving the sensor, as for stills, without cropping it; Electronic is the camera\'s own electronic shake reduction, which crops about 5 % from each side.',
+  movieSrLine: 'Sensor-Shift SR in Video Mode',
+  navUnits: 'Distance Unit', unitsSub: 'Snap Focus Distance and the distance scale of manual focus in metres (m) or feet (ft).', unitsMetre: 'Metres (m)', unitsFeet: 'Feet (ft)',
+  tIcFUnitsB: 'With Feet, Snap Focus Distance (1ft to 16ft, in the menu, on the shooting screen and in ADJ mode) and the distance scale of manual focus are in feet, the close-range scale in inches (in). Metres are as in the official firmware.',
+  unitsLine: 'Distance Unit  ·  feet (Snap Focus Distance, manual focus scale)',
   navHdr: 'HDR gain map', hdrSub: 'Writes an HDR gain map into the JPEGs, so the highlights show brighter on HDR screens', hdrLine: 'HDR gain map  ·  in the JPEGs (switched in Shooting › HDR)',
-  navFlash: 'Direct Flash', flashSub: 'When the flash fires at a fixed power, Direct Flash sets the exposure from the focus distance and the flash\'s guide number you enter.', flashLine: 'Direct Flash  ·  a fifth Flash Mode (fixed power, exposure from the focus distance)',
+  navFlash: 'Flash enhancements', flashSub: 'Direct Flash: when the flash fires at a fixed power, the camera sets the exposure from the focus distance and the flash\'s guide number you enter.',
+  flashPlusSub: 'Direct Flash (fixed power, exposure from the focus distance and guide number) + flash TTL (pre-flash metering for a GF-2 in the two red-eye flash modes).', flashLine: 'Direct Flash  ·  a fifth Flash Mode (fixed power, exposure from the focus distance)',
   navMono: 'B&W presets', monoSub: 'Unlock the looks of the GR IV Monochrome', monoLine: 'B&W presets  ·  the looks of the GR IV Monochrome unlocked',
   extraTitle: 'Added slots', chkChanges: '{n} changes', chkCount: '{n}', chkPictures: '{n}', chkHidden: '{n} hidden', chkRatios: 'Added aspect ratios', extraSub: 'More Image Control slots after the Cinema ones, at most {n}', extraAdd: 'Add slot', extraCountLabel: '{n} added', extraNone: 'None',
   prevSlot: 'Previous slot', nextSlot: 'Next slot',
@@ -357,16 +428,19 @@ const en: typeof zh = {
   lookOrderGr3Note: 'GR III: the movie Image Control list has no Soft Monotone and HDR Tone of its own. A hidden look in use becomes Standard; Custom 1 / 2 keep theirs.', lookOrderHiddenTag: 'hidden', lookOrderMono: 'mono', lookOrderCount: '{n} hidden',
   icViews: 'Image Control views', icViewSlots: 'Image Control', icViewOrder: 'Menu order', lookOrderShown: '{n} shown', lookOrderMoved: '{name} moved to position {n}', lookOrderDrag: 'Drag to reorder',
   tIcViewsT: 'Slots and menu order', tIcViewsB: '"Image Control" sets up the slots; "Menu order" arranges the looks of the camera\'s Image Control menu and hides the ones you do not use.',
-  tIcSoftT: 'Additions', tIcSoftB: 'Features GR Mod adds to the camera. Those switched on go into the firmware with the other changes; each one is introduced next.',
+  tIcSoftT: 'Additions', tIcSoftB: 'Features GR Mod adds to the camera, one card each. Those switched on go into the firmware with the other changes; each one is introduced next.',
   tIcFSoftB: 'Adds "Soft Focus" to the ADJ lever, with off, low, medium and high. The effect cannot be seen in live view; it can be used together with the HDF filter. On camera firmware 1.20 and later it is also under Shooting › Image Process Settings › Soft Focus.',
   tIcFSoftBG3: 'Gives the photos a soft-focus filter look straight out of camera. The effect cannot be seen in live view.',
   tIcFDateB: 'Prints the date in the bottom right corner of the photo (as it is viewed, also when shot upright; with "Follow Orientation" off in its menu, as stored). Off after flashing; turn it on under Shooting Assist › Date Imprint, two styles.',
   tIcFMonoB: 'Unlocks the 6 black-and-white looks of the GR IV Monochrome, and on camera firmware 1.20 and later its Solarized Effect as well.',
-  tIcFFlashB: 'When the flash fires at a fixed power, Direct Flash sets the exposure from the focus distance and the flash\'s guide number you enter.',
+  tIcFFlashB: 'Direct Flash: a fifth Flash Mode. When the flash fires at a fixed power, the camera sets the exposure from the focus distance and the flash\'s guide number you enter; the guide number, background brightness and slowest shutter speed are set under Direct Flash Settings in the Flash Mode submenu. Flash TTL (camera firmware 1.20 / 1.21): with a GF-2 in Flash On+Red-eye (TTL) or Slow Sync+Red-eye (TTL), the live view frame that catches the pre-flash is measured and sets the main flash\'s output (in place of an estimate from the focus distance); when it cannot be measured the camera\'s own output stays. Aperture, ISO and flash compensation work as usual; the other flash modes and the manual output are unchanged.',
+  tIcFShadowB: 'With Shadow Correction on Auto, the camera estimates from the scene how much to lift the shadows, up to the level of High; its own Auto overflows and hardly ever corrects on real photos. Low, Medium, High and Off are exactly as before. The estimate comes from a small model trained on retouchers\' edits; the live view shows it too.',
+  tIcFBatteryB: 'The camera measures the charge in percent but shows only bars, which stay full until the battery is about half empty. With this on, the battery icon on the shooting and playback screens shows the charge in steps of 10% (yellow at 20%, red at 10%); the number changes only when the charge clearly moves. Below 5% and on USB power the camera shows its own icons.',
+  tIcFGrainB: 'Which grain Image Control\'s Grain Effect adds. Camera: the camera\'s own grain. Optimized (camera firmware 1.20 / 1.21): GR Mod\'s film grain, on the brightness only and never the colours, soft grain of a few sizes, strongest in the midtones and fading out in sky, skin and deep shadows; its strength is set for each photo. Grain Effect is then on / off only, the camera\'s Strength and Size are no longer used; the Grainy Monochrome look keeps the camera\'s grain. JPEG only.',
   tIcFHdrB: 'Writes an HDR gain map into the JPEGs, so the highlights show brighter on HDR screens. Switched on and off in the camera under Shooting › HDR.',
   tIcFPreviewB: 'Camera firmware 1.20 and later: choose under Shooting › Exposure Settings › Exposure Preview or on the ADJ lever whether the live view gets brighter and darker with the exposure set (On / Off in Direct Flash / Always Off).',
-  tBatteryB: 'GR IV: the camera measures the charge in percent but shows only bars, which stay full until the battery is about half empty. With this on, the battery icon on the shooting and playback screens shows the charge in steps of 10%; the number changes only when the charge clearly moves. Below 5% and on USB power the camera shows its own icons.',
-  tGridB: 'GR IV: choose which lines the camera\'s 3x3 and 4x4 grids draw, each line on or off. The 3x3 grid can also have center lines and diagonals. On the camera, choose the grid style as before.',
+ 
+  tGridB: 'Design which lines a 3x3 and a 4x4 grid draw, each line on or off; the 3x3 grid can also have center lines and diagonals. Camera firmware 1.20 / 1.21: the camera\'s 3x3 and 4x4 stay in its Grid Style list, followed by Custom 3x3 Grid and Custom 4x4 Grid. Firmware 1.11: the camera\'s 3x3 and 4x4 draw your lines. In every aspect ratio (1:1, 4:3, 16:9 and added ones) the lines stay in the photo area.',
   tIcFAdjB: 'Raises the number of items on the ADJ lever to the number chosen; what each one does is set in the camera under Customize Settings › ADJ Mode Setting.',
   tIcFBrightB: 'With the camera\'s Outdoor View Setting on Auto, the screen is brighter in indoor light: Brighter a little, Brightest more; the highest brightness stays as it is.',
   // Android
@@ -387,7 +461,7 @@ const en: typeof zh = {
   tOvFirmwareBWG3: 'Choose the right model, then tap here to download the firmware from the official source, or to import a firmware file already on this device. Both the new (GR III 2.21, 2.20 / GR IIIx 1.71, 1.70) and the earlier firmware (2.10 / 1.60) can be used; a camera that installs the new one cannot go back to the earlier one.',
   tOvHelpBW: 'If you forget how something works at any point, tap here to go through this guide again, or to start all guides from the beginning.',
   tMSettingsT: 'Settings', tMSettingsB: 'The model and the app language are set here; here you also find the guides.',
-  tOvCombineBM: 'What you set on the Image Control and Aspect ratio pages goes into one firmware: make the changes on each page, then save or send from either page. Earlier changes are kept.',
+  tOvCombineBM: 'What you set on the Image Control, Aspect ratio and Additions pages goes into one firmware: make the changes on each page, then save or send from any of them. Earlier changes are kept.',
   tOvExportTM: 'Save to device', tOvExportBM: 'Builds the firmware and saves it where you choose, to copy to the card with a card reader. Works for every model.',
   tOvWriteTM: 'Send to camera', tOvWriteBM: 'Sends the firmware straight to the camera over Bluetooth and Wi-Fi and starts the update, no card needed. GR IV family only, and only a firmware of the camera\'s own base version (e.g. 1.20 to 1.20).',
   tOvHelpBM: 'If you forget how something works at any point, go through this guide again from the settings, or start all guides from the beginning there.',
@@ -410,28 +484,50 @@ const en: typeof zh = {
  mCrashed: 'Something went wrong in the interface. Please send a screenshot of this to the developer.', mReload: 'Reload',
 };
 export type Key = keyof typeof zh;
-/** Both dictionaries (tests compare them). */
-export const DICTS = { zh, en };
+/** One language's texts: every entry of the Chinese ones. */
+export type Dict = typeof zh;
+/** The interface languages; the order of the language menu. */
+export const UI_LANGS = ['zh', 'zh-TW', 'en', 'ja', 'ko', 'es', 'de'] as const;
+export type UiLang = (typeof UI_LANGS)[number];
+/** Each language's own name, for the language menu. */
+export const UI_LANG_NAMES: Record<UiLang, string> = { zh: '简体中文', 'zh-TW': '繁體中文', en: 'English', ja: '日本語', ko: '한국어', es: 'Español', de: 'Deutsch' };
+/** Every dictionary (tests compare them). */
+export const DICTS: Record<UiLang, Dict> = { zh, 'zh-TW': zhTW, en, ja, ko, es, de };
+export const isUiLang = (v: unknown): v is UiLang => typeof v === 'string' && (UI_LANGS as readonly string[]).includes(v);
 /** The interface language the user picked in the phone app ('' = as the system), kept in the web view's storage. */
 const UI_LANG_KEY = 'grmod.uiLang';
-export function uiLangPref(): '' | 'zh' | 'en' {
-  try { const v = localStorage.getItem(UI_LANG_KEY); return v === 'zh' || v === 'en' ? v : ''; } catch { return ''; }
+export function uiLangPref(): '' | UiLang {
+  try { const v = localStorage.getItem(UI_LANG_KEY); return isUiLang(v) ? v : ''; } catch { return ''; }
 }
 /** Changes the interface language; the page reloads in it unless `reload` is false (store.ts setAppLanguage saves the work first). */
-export function setUiLangPref(v: '' | 'zh' | 'en', reload = true): void {
+export function setUiLangPref(v: '' | UiLang, reload = true): void {
   try { if (v) localStorage.setItem(UI_LANG_KEY, v); else localStorage.removeItem(UI_LANG_KEY); } catch { /* not kept */ }
   if (reload) window.setTimeout(() => window.location.reload(), 120);
 }
-const systemZh = (navigator.language || 'zh').toLowerCase().startsWith('zh');
+/** The system's language among the interface languages: its first one GR Mod has, else English. */
+export function systemUiLang(): UiLang {
+  for (const raw of navigator.languages?.length ? navigator.languages : [navigator.language || 'en']) {
+    const l = raw.toLowerCase();
+    if (l.startsWith('zh')) return /-(tw|hk|mo)\b|hant/.test(l) ? 'zh-TW' : 'zh';
+    const base = l.split('-')[0];
+    if (isUiLang(base)) return base;
+  }
+  return 'en';
+}
 /** The interface language in use. */
-export const UI_LANG: 'zh' | 'en' = uiLangPref() || (systemZh ? 'zh' : 'en');
-const dict = UI_LANG === 'zh' ? zh : en;
+export const UI_LANG: UiLang = uiLangPref() || systemUiLang();
+/** The two languages the release notes and the signed update notes are written in: Chinese for both Chinese, else English. */
+export const NOTES_LANG: 'zh' | 'en' = UI_LANG === 'zh' || UI_LANG === 'zh-TW' ? 'zh' : 'en';
+/** Chinese and Japanese punctuation (full width) in texts put together by the program. */
+export const WIDE_PUNCT = UI_LANG === 'zh' || UI_LANG === 'zh-TW' || UI_LANG === 'ja';
+const dict = DICTS[UI_LANG];
+try { document.documentElement.lang = UI_LANG === 'zh' ? 'zh-CN' : UI_LANG; } catch { /* no document (tests) */ }
 /** The phone app (Android, iOS): its own wording where the desktop's would be wrong (no dragging, no card). */
 const capx = (globalThis as unknown as { Capacitor?: { isNativePlatform?: () => boolean; getPlatform?: () => string } }).Capacitor;
 const PHONE = !!capx?.isNativePlatform?.() && ['android', 'ios'].includes(capx.getPlatform?.() ?? '');
 export function t(key: Key, vars?: Record<string, string | number>): string {
   const own = PHONE ? (dict as Record<string, string>)[`${key}M`] : undefined;
-  let s: string = own ?? dict[key] ?? key;
+  let s: string = own ?? dict[key] ?? DICTS.en[key] ?? key;
   if (vars) for (const k of Object.keys(vars)) s = s.split(`{${k}}`).join(String(vars[k]));
   return s;
 }

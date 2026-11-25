@@ -315,6 +315,25 @@ export function installTexts(patch: Patch, entries: readonly { id: number; names
   for (const site of patch.textBoundSites) patch.setWord(site, movWord(3, Math.max(upper, movImmediate(patch.word(site)))), 'text upper bound');
 }
 
+/** A text of the catalog in every language, in `LANGS` order (the camera's own, or one installed before). */
+export function readTexts(patch: Patch, id: number): string[] {
+  const roots = new DataView(patch.readMapped(NATIVE_TEXT_ROOTS, LANGUAGES * 4).buffer);
+  const out = new Array<string>(LANGUAGES).fill('');
+  for (let l = 0; l < LANGUAGES; l++) {
+    const k = (roots.getUint32(l * 4, true) + 4 - FIRST_TABLE_RAM) / TABLE_STRIDE;
+    if (!(Number.isInteger(k) && k >= 0 && k < LANGUAGES)) fail('unexpected-layout', 'language tables are not where they were expected');
+    const descriptor = patch.word(patch.word(TEXT_CATALOG + l * 4) + id * 4);
+    if (descriptor === 0) fail('unexpected-layout', 'text is not in the catalog');
+    const d = patch.readMapped(descriptor, 8);
+    const units = d[0];
+    const text = patch.readMapped((d[4] | (d[5] << 8) | (d[6] << 16) | (d[7] << 24)) >>> 0, units * 2);
+    let s = '';
+    for (let i = 0; i + 1 < units; i++) s += String.fromCharCode(text[i * 2] | (text[i * 2 + 1] << 8));
+    out[k] = s;
+  }
+  return out;
+}
+
 function installIcons(patch: Patch, iconbin: Uint8Array): Uint8Array {
   const parts: Uint8Array[] = [iconbin];
   let length = iconbin.length;
@@ -348,6 +367,17 @@ function installIcons(patch: Patch, iconbin: Uint8Array): Uint8Array {
 
 export { FACTORY as CONTROLLER_FACTORY, D_RANGE_ID as SUBMENU_CONTROLLER_ID, HORIZON_ID as LIST_CONTROLLER_ID };
 export { SUB_SET_ICON, LIST_SET_ITEM, SUB_RECORD, TOP_SET_TITLE, ICON_OFF, ICON_ON, TEXT_OFF, TEXT_ON };
+
+/** Where the list table (SelectMenuController records, 0x4c bytes) is now: the official one or its latest copy. */
+export function listTable(patch: Patch): number {
+  const at = SELECT_SITES.map(([low, high, r]) => {
+    const a = patch.word(low), b = patch.word(high);
+    if (a !== movWord(r, movImmediate(a)) || b !== movWord(r, movImmediate(b), true)) fail('unexpected-layout', 'list table site is not a MOVW/MOVT pair');
+    return (movImmediate(a) | (movImmediate(b) << 16)) >>> 0;
+  });
+  if (at.some((t) => t !== at[0]) || (at[0] === SELECT_TABLE) !== (patch.listRecords === 0)) fail('unexpected-layout', 'list table is not where it was expected');
+  return at[0];
+}
 
 /** Where the submenu table (SubMenuController records, 0x64 bytes) is now: the official one or its latest copy. */
 export function submenuTable(patch: Patch): number {

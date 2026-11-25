@@ -35,6 +35,7 @@ import { HDR_SWITCH_BYTE, installHdrGainMap } from './hdrgain';
 import { hdrTopDraw, installDateStampMenu, installHdrMenu, installHdrStillLine } from './datestamp-menu';
 import { installMonoUnlock } from './monounlock';
 import { installBrightAuto } from './brightauto';
+import { installShadowLearn } from './shadowml';
 import { CINEMA_STYLES, installExtraSlots, installHalation } from './slots';
 import { halationLight } from './halation';
 import type { HalationLook } from './halation';
@@ -44,7 +45,7 @@ import type { ExtraSlotSpec } from './slots';
 import { installShutdownMenu } from './shutdown';
 import { FIRST_ADDED_LOOK, installSettingsGuard } from './guard';
 import { installAdjSlots } from './adjslots';
-import { installBatteryPercent } from './battery';
+import { extendBatteryZeroFill, installBatteryPercent } from './battery';
 import { installCustomGrid, isCameraGrid, validCustomGrid } from './grid';
 import type { CustomGrid } from './grid';
 import { installRatioShade } from './shade';
@@ -171,6 +172,26 @@ export interface ExtensionFeatures {
   ratioShade?: boolean;
   /** How dark the shade is (`shade.ts`): 'dark' (black at 50 %, the default) or 'light' (grey at 25 %). */
   ratioShadeTone?: ShadeTone;
+  /** A learned Auto for Shadow Correction (see `shadowml.ts`); GR IV 1.11, 1.20 and 1.21. Off unless asked for. */
+  shadowLearn?: boolean;
+  /** GR IV 1.20 and 1.21 (`fw/gr4v120/aspect/grain.ts`; not built on 1.11): GR Mod's film grain in place of the camera's Grain Effect. */
+  filmGrain?: boolean;
+  /** GR IV 1.20 and 1.21 (`fw/gr4v120/aspect/flttl.ts`; not built on 1.11): pre-flash (TTL) metering for a GF-2 class flash. */
+  flashTtl?: boolean;
+  /** GR IV 1.20 and 1.21 (`fw/gr4v120/aspect/videoaf.ts`; not built on 1.11): movie AF driven by the phase data. */
+  videoAf?: boolean;
+  /** GR IV 1.20 and 1.21 (`fw/gr4v120/aspect/awb2.ts`; not built on 1.11): a learned auto white balance for the three Auto modes. */
+  awbLearn?: boolean;
+  /** GR IV 1.20 and 1.21 (`fw/gr4v120/aspect/movieexp.ts`; not built on 1.11): movies in the exposure mode of the mode dial. */
+  movieExposure?: boolean;
+  /** Not on 1.11 (the engine refuses it there): 1.20 and 1.21 only. */
+  constantLight?: boolean;
+  /** GR IV 1.20 and 1.21 only (`fw/gr4v120/aspect/shift.ts`, `movie4k.ts`, `moviesr.ts`; the engine refuses them on 1.11). */
+  sensorShift?: boolean;
+  movie4k?: boolean;
+  movieSr?: boolean;
+  /** GR IV 1.20 and 1.21 only (`fw/gr4v120/aspect/units.ts`; the engine refuses it on 1.11): distances in feet. */
+  distanceFeet?: boolean;
 }
 
 /** For test builds only: a fixed setting byte (1 short, 3 long style) instead of the camera menu. */
@@ -1059,7 +1080,7 @@ export function installExtensions(rtos: Uint8Array, iconbin: Uint8Array, ratios:
   const shutdown = features.shutdown && features.shutdown.pictures.length > 0 ? features.shutdown : undefined;
   const cinema = (['CY', 'CG'] as const).filter((id) => features.cinemaHalation?.[id] === true);
   const adjSlots = features.adjSlots && features.adjSlots > 5 ? features.adjSlots : 0;
-  const extra = !!features.brightAuto || !!features.adjSoftFocus || !!features.dateStamp || !!features.monoUnlock || slots.length > 0 || !!shutdown || !!features.guard || cinema.length > 0 || !!features.directFlash || adjSlots > 0 || !!features.hdrGainMap || !!features.batteryPercent || !!features.customGrid || !!features.ratioShade;
+  const extra = !!features.brightAuto || !!features.adjSoftFocus || !!features.dateStamp || !!features.monoUnlock || slots.length > 0 || !!shutdown || !!features.guard || cinema.length > 0 || !!features.directFlash || adjSlots > 0 || !!features.hdrGainMap || !!features.batteryPercent || !!features.customGrid || !!features.ratioShade || !!features.shadowLearn;
   if (features.customGrid && (!validCustomGrid(features.customGrid) || isCameraGrid(features.customGrid))) fail('internal', 'a custom grid must differ from the camera’s');
   if (features.ratioShade && ratios.length === 0) fail('internal', 'the live-view shade needs an added ratio');
   if (extra) revision = 3;
@@ -1071,6 +1092,9 @@ export function installExtensions(rtos: Uint8Array, iconbin: Uint8Array, ratios:
     if (r.id !== FIRST_CUSTOM_ID + i) fail('internal', 'ratio identities must be consecutive');
   });
   if (features.brightAuto !== undefined && ![true, false, 'bright', 'balanced'].includes(features.brightAuto)) fail('bad-edit', 'brightAuto must be boolean, bright or balanced');
+  if (features.shadowLearn !== undefined && typeof features.shadowLearn !== 'boolean') fail('bad-edit', 'shadowLearn must be boolean');
+  // Its two RAM words are those of the diagnostics of Direct Flash and the HDR gain map's counters (test builds).
+  if (features.shadowLearn && (test.directFlashDiag || test.hdrDiag)) fail('internal', 'the learned shadow correction cannot be built with diagnostics');
   const patch = new Patch(rtos);
   const ramCopy = new DataView(patch.read(BASE + 0x450, 12).buffer);
   if (ramCopy.getUint32(0, true) !== RAM.source || ramCopy.getUint32(4, true) !== RAM.destination || ramCopy.getUint32(8, true) !== RAM.length) {
@@ -1137,12 +1161,14 @@ export function installExtensions(rtos: Uint8Array, iconbin: Uint8Array, ratios:
   // Last: wraps every other settings save/load and user-mode recall hook.
   if (features.guard) installSettingsGuard(patch, { slots: slots.length, ratios: ratios.length > 0, adjSoftFocus: !!features.adjSoftFocus, ...(features.lookLayout ? { hiddenLooks: features.lookLayout.hidden } : {}), ...(adjSlots > 0 ? { adjSlots } : {}), ...(features.hdrGainMap ? { hdr: true } : {}) });
   if (features.brightAuto) installBrightAuto(patch, features.brightAuto === 'balanced' ? 'balanced' : 'bright');
-  // The HDR gain map's test counters (`HDR_COUNTERS`) use the byte the battery percentage keeps.
-  if (features.batteryPercent && features.hdrGainMap && test.hdrDiag) fail('internal', 'the battery percentage cannot be combined with the HDR gain map’s test counters');
   if (features.batteryPercent) icons = installBatteryPercent(patch, icons, !!test.batteryDiag);
   // After the ratios: the diagonals take the point setter the grid view's layout calls then.
   if (features.customGrid) installCustomGrid(patch, features.customGrid);
+  // Last: appended after everything else, so every other addition keeps its place without it.
+  if (features.shadowLearn) installShadowLearn(patch);
+  // Very last: the zero fill over the sbrk arena; the additions above expect it at 0x55837300 or its official end.
+  if (features.batteryPercent) extendBatteryZeroFill(patch);
   if (patch.length % 4 !== 0) fail('internal', 'image length is not a multiple of 4');
   if (BASE + patch.length >= APPEND_LIMIT) fail('too-many-ratios', 'the appended area would reach the RAM area');
-  return { revision, rtos: patch.bytes(), iconbin: icons, ratios: [...ratios], words: patch.words, features: { ...(features.brightAuto ? { brightAuto: features.brightAuto === 'balanced' ? 'balanced' as const : 'bright' as const } : {}), adjSoftFocus: !!features.adjSoftFocus, ...(features.dateStamp ? { dateStamp: true } : {}), ...(features.monoUnlock ? { monoUnlock: true } : {}), ...(slots.length > 0 ? { extraSlots: [...slots] } : {}), ...(shutdown ? { shutdown } : {}), ...(features.guard ? { guard: true } : {}), ...(cinema.length > 0 ? { cinemaHalation: Object.fromEntries(cinema.map((id) => [id, true])) } : {}), ...(features.lookLayout ? { lookLayout: features.lookLayout } : {}), ...(features.directFlash ? { directFlash: true } : {}), ...(features.hdrGainMap ? { hdrGainMap: true } : {}), ...(adjSlots > 0 ? { adjSlots } : {}), ...(features.batteryPercent ? { batteryPercent: true } : {}), ...(features.customGrid ? { customGrid: features.customGrid } : {}), ...(features.ratioShade ? { ratioShade: true, ...(features.ratioShadeTone && features.ratioShadeTone !== 'dark' ? { ratioShadeTone: features.ratioShadeTone } : {}) } : {}) } };
+  return { revision, rtos: patch.bytes(), iconbin: icons, ratios: [...ratios], words: patch.words, features: { ...(features.brightAuto ? { brightAuto: features.brightAuto === 'balanced' ? 'balanced' as const : 'bright' as const } : {}), adjSoftFocus: !!features.adjSoftFocus, ...(features.dateStamp ? { dateStamp: true } : {}), ...(features.monoUnlock ? { monoUnlock: true } : {}), ...(slots.length > 0 ? { extraSlots: [...slots] } : {}), ...(shutdown ? { shutdown } : {}), ...(features.guard ? { guard: true } : {}), ...(cinema.length > 0 ? { cinemaHalation: Object.fromEntries(cinema.map((id) => [id, true])) } : {}), ...(features.lookLayout ? { lookLayout: features.lookLayout } : {}), ...(features.directFlash ? { directFlash: true } : {}), ...(features.hdrGainMap ? { hdrGainMap: true } : {}), ...(adjSlots > 0 ? { adjSlots } : {}), ...(features.batteryPercent ? { batteryPercent: true } : {}), ...(features.customGrid ? { customGrid: features.customGrid } : {}), ...(features.ratioShade ? { ratioShade: true, ...(features.ratioShadeTone && features.ratioShadeTone !== 'dark' ? { ratioShadeTone: features.ratioShadeTone } : {}) } : {}), ...(features.shadowLearn ? { shadowLearn: true } : {}) } };
 }

@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
-import { CAMERA_GRID, card, GR3X_FILM_IDS, GRID_LINE_COUNT, LANGS } from '@grmod/core';
-import type { CameraModel, CustomGrid, FirmwareInfo, FirmwareSummary, LangCode, PresetResult, RatioPreview, ShadeTone, SlotId } from '@grmod/core';
+import { CAMERA_GRID, card, defaultFramingGuides, GR3X_FILM_IDS, GRID_LINE_COUNT, LANGS } from '@grmod/core';
+import type { CameraModel, CustomGrid, FirmwareInfo, FramingGuides, FirmwareSummary, LangCode, PresetResult, RatioPreview, ShadeTone, SlotId } from '@grmod/core';
 
 /** How dark the live-view shade is: black at 50 % or grey at 25 % (core's ShadeTone). */
 export type { ShadeTone };
@@ -11,7 +11,10 @@ import { t, uiLangPref } from '../i18n';
 import type { Crop } from '../pixels';
 import { SUPPORTED_LINES } from '../releases.gen';
 
-export type Page = 'ic' | 'ratio' | 'battery' | 'grid' | 'wall' | 'copies';
+/** `extras`: the additions (switches, the custom grid); 0.8.16 and earlier had a page of its own for the grid (`grid`). */
+export type Page = 'ic' | 'ratio' | 'extras' | 'wall' | 'copies';
+/** What the additions page shows: the list of additions, or the custom grid's editor (opened from its card). */
+export type ExtrasView = 'list' | 'grid';
 /** The camera's own grids, as custom grid lines (a fresh copy to edit). */
 export const cameraGrid = (): CustomGrid => ({ g3: [...CAMERA_GRID.g3], g4: [...CAMERA_GRID.g4] });
 /** Grid lines as saved in the project: eight booleans per style, else the camera's own. */
@@ -59,13 +62,13 @@ export interface BuildRecord { sha256: string; time: number; slots: { id: SlotId
 /** `warn` is an optional caution shown under the lines (used where something is deleted for good). */
 /** A guided tour: `overview` is the one of the first start, the others belong to a page. */
 export type TourId = 'overview' | Page;
-export const TOUR_IDS: readonly TourId[] = ['overview', 'ic', 'ratio', 'battery', 'grid', 'wall', 'copies'];
+export const TOUR_IDS: readonly TourId[] = ['overview', 'ic', 'ratio', 'extras', 'wall', 'copies'];
 /** The tour being shown: `steps` are the indices of its steps that have something to point at; a replay can be skipped. */
 export interface TourState { id: TourId; steps: number[]; index: number; replay: boolean }
 /** `reset`: the firmware written is the official one; the dialog asks in red whether the camera's settings were reset first. */
 export interface Confirm { title: string; warn?: string; reset?: boolean; lines: string[]; ok: string; resolve: (v: boolean) => void }
 export interface State {
-  ready: boolean; page: Page;
+  ready: boolean; page: Page; extrasView: ExtrasView;
   fwName?: string; fwBusy: boolean; info?: FirmwareInfo; raw?: Uint8Array;
   model: CameraModel; lang: LangCode;
   /** The camera language follows the system's (lang is then systemCameraLang()): the app language is "follow system". */
@@ -86,12 +89,38 @@ export interface State {
   ratioShade: boolean;
   /** How dark the live-view shade is (UI palette black 50 % / grey 25 %). */
   ratioShadeTone: ShadeTone;
+  /** GR IV 1.20 / 1.21: the shade level the ratio page previews (not saved). */
+  shadePreview: '100' | '75' | '50' | '25' | '0';
   /** GR IV: the battery icon shows the charge in steps of 10 % instead of the bars. */
   battery: boolean;
   /** GR IV: custom grid lines (`gridLines`) instead of the camera's own grids. */
   customGrid: boolean;
-  /** Which lines the camera's 3x3 and 4x4 grids draw with `customGrid` on (core: CustomGrid). */
+  /** Which lines the camera's 3x3 and 4x4 grids draw with `customGrid` on (core: CustomGrid); GR IV 1.11. */
   gridLines: CustomGrid;
+  /** GR IV 1.20 / 1.21: the framing guides drawn with `customGrid` on, in place of `gridLines` (core: FramingGuides). */
+  framing: FramingGuides;
+  /** The learned Auto for Shadow Correction (GR IV 1.11 / 1.20 / 1.21; off by default). */
+  shadowLearn: boolean;
+  /** GR IV 1.20 / 1.21: GR Mod's film grain in place of the camera's Grain Effect (off by default). */
+  filmGrain: boolean;
+  /** GR IV 1.20 / 1.21: pre-flash (TTL) metering for a GF-2 class flash in the two red-eye flash modes (off by default). */
+  flashTtl: boolean;
+  /** GR IV 1.20 / 1.21: movie AF driven by the phase data (off by default). */
+  videoAf: boolean;
+  /** GR IV 1.20 / 1.21: the learned auto white balance for the three Auto modes (off by default). */
+  awbLearn: boolean;
+  /** GR IV 1.20 / 1.21: movies in the exposure mode of the mode dial, shutter speed, aperture and ISO adjustable (off by default). */
+  movieExposure: boolean;
+  /** Constant Light (GR IV 1.20 / 1.21): the front lamp kept lit, switched in the camera. */
+  constantLight: boolean;
+  /** Sensor Shift (GR IV 1.20 / 1.21): the picture moved and turned by hand with the shake reduction unit, from ADJ mode or a button. */
+  sensorShift: boolean;
+  /** 4K movies (GR IV 1.20 / 1.21): the movie menu's Frame Rate becomes Frame Rate / Resolution. */
+  movie4k: boolean;
+  /** Shake reduction for movies by sensor shift (GR IV 1.20 / 1.21): Movie SR offers Off / Sensor Shift / Electronic. */
+  movieSr: boolean;
+  /** Distances in feet (GR IV 1.20 / 1.21): Snap Focus Distance and the manual focus scale; metres by default. */
+  distanceFeet: boolean;
   /** ADJ lever slots in the build: 5 (the camera's) to 8 (GR IV). */
   adjSlots: number;
   /** GR IV, experimental: .cube presets of added slots get hue sectors of their own (core color/hue.ts). */
@@ -125,8 +154,8 @@ export const availableSlots = (s: State = state): SlotId[] => s.info ? shownSlot
 export const emptySlot = (): SlotState => ({ names: {}, icon: { mode: 'keep', text: '', style: 'film' } });
 export const emptySlots = (): Record<SlotId, SlotState> => Object.fromEntries(SLOT_IDS.map(id => [id, emptySlot()])) as Record<SlotId, SlotState>;
 export let state: State = {
-  ready: false, page: 'ic', fwBusy: false, model: 'HDF', lang: cameraLang(), langAuto: uiLangPref() === '',
-  slots: emptySlots(), extras: [], lookOrder: [], lookHidden: [], lookOrder3: [], lookHidden3: [], wall: [], ratios: [], ratioBackdrop: 'photo', brightAuto: false, soft: false, dateStamp: false, monoUnlock: false, directFlash: false, hdr: false, exposurePreview: false, ratioShade: false, ratioShadeTone: 'dark', battery: false, customGrid: false, gridLines: cameraGrid(), adjSlots: 5, filmCount: 0, previewMode: 'photo', photoRev: 0, activeSlot: 'CY', volumes: [],
+  ready: false, page: 'ic', extrasView: 'list', fwBusy: false, model: 'HDF', lang: cameraLang(), langAuto: uiLangPref() === '',
+  slots: emptySlots(), extras: [], lookOrder: [], lookHidden: [], lookOrder3: [], lookHidden3: [], wall: [], ratios: [], ratioBackdrop: 'photo', brightAuto: false, soft: false, dateStamp: false, monoUnlock: false, directFlash: false, hdr: false, exposurePreview: false, filmGrain: false, shadowLearn: false, ratioShade: false, ratioShadeTone: 'dark', shadePreview: '75', battery: false, customGrid: false, gridLines: cameraGrid(), framing: defaultFramingGuides(), flashTtl: false, videoAf: false, awbLearn: false, movieExposure: false, sensorShift: false, movie4k: false, movieSr: false, distanceFeet: false, constantLight: false, adjSlots: 5, filmCount: 0, previewMode: 'photo', photoRev: 0, activeSlot: 'CY', volumes: [],
   copySource: 'card', parked: [], backups: [], copySel: [], copyInfo: {}, builds: [], showAll: false, toasts: [], onlineOpen: false, toursSeen: [],
 };
 const listeners = new Set<() => void>();
@@ -194,12 +223,12 @@ export function fail(e: unknown): void {
 }
 
 /**
- * The camera language (whose names Image Control changes) follows the app language: 简体中文 → zh-CN, English → en,
- * following the system → the system's language where the camera has it (else English).
+ * The camera language (whose names Image Control changes) follows the app language: 简体中文 → zh-CN, the others → the
+ * camera's same language, following the system → the system's language where the camera has it (else English).
  */
 export function cameraLang(): LangCode {
   const ui = uiLangPref();
-  return ui === 'zh' ? 'zh-CN' as LangCode : ui === 'en' ? 'en' as LangCode : systemCameraLang();
+  return ui === 'zh' ? 'zh-CN' as LangCode : ui ? ui as LangCode : systemCameraLang();
 }
 /** The camera language closest to the phone's own: its first language GR IV has, else English. */
 export function systemCameraLang(): LangCode {

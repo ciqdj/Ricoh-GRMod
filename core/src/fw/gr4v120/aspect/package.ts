@@ -21,11 +21,14 @@
  * menu order, u8 h, the h hidden styles; bit 7 (0.8.4): Direct Flash (`directflash.ts`)). Then
  * (0.8.6) one more byte of additions, where earlier builds have their zero padding: bit 0, the HDR
  * gain map (`hdrgain.ts`); bit 1, ADJ lever slots (`adjslots.ts`), their number (6..8) follows in
- * one more byte. Bit 2: a following bright-Auto curve byte (1 bright, 2 balanced). Bit 7: a third
- * byte of additions follows, after those bytes: bit 0, live view of the added ratios with the
- * whole frame and the part outside darkened (`shade.ts`); bit 1, its lighter colour ('light');
- * bit 2, the battery percentage (`battery.ts`); bit 3, custom grid lines (`grid.ts`), followed by
- * two bytes, the 3x3 and the 4x4 style's lines (line i in bit i).
+ * one more byte. Bit 2: a following bright-Auto curve byte (1 bright, 2 balanced). Bit 5: the learned
+ * Auto for Shadow Correction (`shadowml.ts`); bit 6: GR Mod's film grain (`grain.ts`; bits 3 and 4
+ * are exposure preview's). Bit 7: a third byte of additions follows, after those bytes: bit 0, live
+ * view of the added ratios with the whole frame and the part outside darkened (`shade.ts`); bit 1,
+ * its lighter colour ('light'); bit 2, the battery percentage (`battery.ts`); bit 3, custom grid
+ * lines (`grid.ts`), followed by two bytes, the 3x3 and the 4x4 style's lines (line i in bit i);
+ * bit 4, pre-flash (TTL) metering for a GF-2 class flash (`flttl.ts`); bit 5, movie AF driven by the
+ * phase data (`videoaf.ts`); bit 6, the learned auto white balance (`awb2.ts`).
  * A build without them reads as before; earlier programs do not take a record with
  * this byte set.
  *
@@ -40,6 +43,7 @@ import { MAX_CUSTOM_RATIOS, OFFICIAL_ICONBIN_LENGTH, OFFICIAL_RTOS_LENGTH } from
 import type { AspectResult, BuildRevision, ExtensionFeatures, RatioSpec } from './build';
 import { MAX_EXTRA_SLOTS } from './slots';
 import { gridByte, gridLinesOf, isCameraGrid } from './grid';
+import { decodeFramingGuides, encodeFramingGuides, framingValues } from './framing';
 import { ADJ_SLOTS_MAX } from './adjslots';
 import { RES_ANCHOR, SHUTDOWN_MAX_PICTURES, shutdownFiles } from './shutdown';
 import { readRes, resRecords } from './res';
@@ -85,6 +89,8 @@ const FEATURE2_BRIGHT_AUTO = 4;
 /** Second feature byte (0.8.11): bit 3 exposure preview, bit 4 soft focus's still-menu line (`exposure.ts`). */
 const FEATURE2_EXPOSURE_PREVIEW = 8;
 const FEATURE2_SOFT_FOCUS_MENU = 16;
+/** Second feature byte: bit 5, the learned Auto for Shadow Correction (`shadowml.ts`). */
+const FEATURE2_SHADOW_LEARN = 32;
 /** Second feature byte: bit 7, a third feature byte follows (after the bytes of bits 1 and 2). */
 const FEATURE2_MORE = 128;
 /** Third feature byte: bit 0, live view of the added ratios with the part outside darkened (`shade.ts`). */
@@ -95,6 +101,30 @@ const FEATURE3_SHADE_LIGHT = 2;
 const FEATURE3_BATTERY = 4;
 /** Third feature byte: bit 3, custom grid lines (`grid.ts`); two bytes follow, the 3x3 and the 4x4 style's lines. */
 const FEATURE3_CUSTOM_GRID = 8;
+/** Second feature byte: bit 6, GR Mod's film grain in place of the camera's Grain Effect (`grain.ts`). */
+const FEATURE2_FILM_GRAIN = 64;
+/** Third feature byte: bit 4, pre-flash (TTL) metering for a GF-2 class flash (`flttl.ts`). */
+const FEATURE3_FLASH_TTL = 16;
+/** Third feature byte: bit 5, movie AF driven by the phase data (`videoaf.ts`). */
+const FEATURE3_VIDEO_AF = 32;
+/** Third feature byte: bit 6, the learned auto white balance (`awb2.ts`). */
+const FEATURE3_AWB_LEARN = 64;
+/** Third feature byte: bit 7, exposure modes for movies (`movieexp.ts`). */
+const FEATURE3_MOVIE_EXPOSURE = 128;
+/**
+ * Fourth feature byte. The third byte has no bit left to announce it: it follows the third byte (and the grid's two
+ * bytes) only when it is not zero, which the zero padding of the record can never be; a third byte of zero is
+ * written, and accepted, only in front of it. Bit 0, the front lamp kept lit (`lamp.ts`).
+ */
+const FEATURE4_CONSTANT_LIGHT = 1;
+/** Fourth feature byte: bit 1 Sensor Shift (`shift.ts`), bit 2 4K movies (`movie4k.ts`), bit 3 the sensor-shift shake reduction for movies (`moviesr.ts`). */
+const FEATURE4_SENSOR_SHIFT = 2;
+const FEATURE4_MOVIE_4K = 4;
+const FEATURE4_MOVIE_SR = 8;
+/** Fourth feature byte: bit 4, framing guides (`framing.ts`); after the fourth byte, u16 length and the guides' bytes. */
+const FEATURE4_FRAMING = 16;
+/** Fourth feature byte: bit 5, distances in feet (`units.ts`). */
+const FEATURE4_DISTANCE_FEET = 32;
 
 /**
  * `u8 count, then per ratio: u8 length + ratio text, u8 length + name`, (revision 3: `u8 features`),
@@ -126,16 +156,22 @@ function encodeRecord(specs: readonly RatioSpec[], revision: BuildRevision, feat
   if (tone !== 'dark' && tone !== 'light') fail('internal', 'unknown shade tone');
   if (tone !== 'dark' && !features.ratioShade) fail('internal', 'a shade tone needs the live-view shade');
   if (features.ratioShade && specs.length === 0) fail('internal', 'the live-view shade needs an added ratio');
-  const f3 = (features.ratioShade ? FEATURE3_RATIO_SHADE : 0) | (tone === 'light' ? FEATURE3_SHADE_LIGHT : 0) | (features.batteryPercent ? FEATURE3_BATTERY : 0) | (features.customGrid ? FEATURE3_CUSTOM_GRID : 0);
-  if (features.brightAuto || features.hdrGainMap || (features.adjSlots && features.adjSlots > 5) || features.exposurePreview || features.softFocusMenu || f3) {
-    if (revision < 3) fail('internal', 'the HDR gain map, ADJ slots, bright Auto, exposure preview, the soft focus line and the third feature byte need revision 3');
+  const f3 = (features.ratioShade ? FEATURE3_RATIO_SHADE : 0) | (tone === 'light' ? FEATURE3_SHADE_LIGHT : 0) | (features.batteryPercent ? FEATURE3_BATTERY : 0) | (features.customGrid ? FEATURE3_CUSTOM_GRID : 0) | (features.flashTtl ? FEATURE3_FLASH_TTL : 0) | (features.videoAf ? FEATURE3_VIDEO_AF : 0) | (features.awbLearn ? FEATURE3_AWB_LEARN : 0) | (features.movieExposure ? FEATURE3_MOVIE_EXPOSURE : 0);
+  const f4 = (features.constantLight ? FEATURE4_CONSTANT_LIGHT : 0) | (features.sensorShift ? FEATURE4_SENSOR_SHIFT : 0) | (features.movie4k ? FEATURE4_MOVIE_4K : 0) | (features.movieSr ? FEATURE4_MOVIE_SR : 0) | (features.framing ? FEATURE4_FRAMING : 0) | (features.distanceFeet ? FEATURE4_DISTANCE_FEET : 0);
+  if (features.brightAuto || features.hdrGainMap || (features.adjSlots && features.adjSlots > 5) || features.exposurePreview || features.softFocusMenu || features.shadowLearn || features.filmGrain || f3 || f4) {
+    if (revision < 3) fail('internal', 'the HDR gain map, ADJ slots, bright Auto, exposure preview, the soft focus line, the learned shadow correction, the film grain and the third and fourth feature bytes need revision 3');
     const adj = features.adjSlots && features.adjSlots > 5 ? features.adjSlots : 0;
     if (adj && !(Number.isInteger(adj) && adj <= ADJ_SLOTS_MAX)) fail('internal', 'ADJ slots cannot be recorded');
-    bytes.push((features.hdrGainMap ? FEATURE2_HDR_GAIN_MAP : 0) | (adj ? FEATURE2_ADJ_SLOTS : 0) | (features.brightAuto ? FEATURE2_BRIGHT_AUTO : 0) | (features.exposurePreview ? FEATURE2_EXPOSURE_PREVIEW : 0) | (features.softFocusMenu ? FEATURE2_SOFT_FOCUS_MENU : 0) | (f3 ? FEATURE2_MORE : 0));
+    bytes.push((features.hdrGainMap ? FEATURE2_HDR_GAIN_MAP : 0) | (adj ? FEATURE2_ADJ_SLOTS : 0) | (features.brightAuto ? FEATURE2_BRIGHT_AUTO : 0) | (features.exposurePreview ? FEATURE2_EXPOSURE_PREVIEW : 0) | (features.softFocusMenu ? FEATURE2_SOFT_FOCUS_MENU : 0) | (features.shadowLearn ? FEATURE2_SHADOW_LEARN : 0) | (features.filmGrain ? FEATURE2_FILM_GRAIN : 0) | (f3 || f4 ? FEATURE2_MORE : 0));
     if (adj) bytes.push(adj);
     if (features.brightAuto) bytes.push(features.brightAuto === 'balanced' ? 2 : 1);
-    if (f3) bytes.push(f3);
+    if (f3 || f4) bytes.push(f3);
     if (features.customGrid) bytes.push(gridByte(features.customGrid.g3), gridByte(features.customGrid.g4));
+    if (f4) bytes.push(f4);
+    if (features.framing) {
+      const g = encodeFramingGuides(features.framing);
+      bytes.push(g.length & 0xff, g.length >>> 8, ...g);
+    }
   }
   while (bytes.length % 4) bytes.push(0);
   return Uint8Array.from(bytes);
@@ -226,10 +262,11 @@ function parseRecord(rtos: Uint8Array): ParsedRecord | null {
     if (f & FEATURE_DIRECT_FLASH) features.directFlash = true;
     if (p < rec.length) {
       const f2 = rec[p++];
-      if ((f2 & ~(FEATURE2_HDR_GAIN_MAP | FEATURE2_ADJ_SLOTS | FEATURE2_BRIGHT_AUTO | FEATURE2_EXPOSURE_PREVIEW | FEATURE2_SOFT_FOCUS_MENU | FEATURE2_MORE)) !== 0) return null;
+      if ((f2 & ~(FEATURE2_HDR_GAIN_MAP | FEATURE2_ADJ_SLOTS | FEATURE2_BRIGHT_AUTO | FEATURE2_EXPOSURE_PREVIEW | FEATURE2_SOFT_FOCUS_MENU | FEATURE2_SHADOW_LEARN | FEATURE2_FILM_GRAIN | FEATURE2_MORE)) !== 0) return null;
       if (f2 & FEATURE2_HDR_GAIN_MAP) features.hdrGainMap = true;
       if (f2 & FEATURE2_EXPOSURE_PREVIEW) features.exposurePreview = true;
       if (f2 & FEATURE2_SOFT_FOCUS_MENU) features.softFocusMenu = true;
+      if (f2 & FEATURE2_FILM_GRAIN) features.filmGrain = true;
       if (f2 & FEATURE2_ADJ_SLOTS) {
         if (p >= rec.length) return null;
         const n = rec[p++];
@@ -242,10 +279,15 @@ function parseRecord(rtos: Uint8Array): ParsedRecord | null {
         if (mode !== 1 && mode !== 2) return null;
         features.brightAuto = mode === 2 ? 'balanced' : 'bright';
       }
+      if (f2 & FEATURE2_SHADOW_LEARN) features.shadowLearn = true;
       if (f2 & FEATURE2_MORE) {
         if (p >= rec.length) return null;
         const f3 = rec[p++];
-        if (f3 === 0 || (f3 & ~(FEATURE3_RATIO_SHADE | FEATURE3_SHADE_LIGHT | FEATURE3_BATTERY | FEATURE3_CUSTOM_GRID)) !== 0) return null;
+        if ((f3 & ~(FEATURE3_RATIO_SHADE | FEATURE3_SHADE_LIGHT | FEATURE3_BATTERY | FEATURE3_CUSTOM_GRID | FEATURE3_FLASH_TTL | FEATURE3_VIDEO_AF | FEATURE3_AWB_LEARN | FEATURE3_MOVIE_EXPOSURE)) !== 0) return null;
+        if (f3 & FEATURE3_FLASH_TTL) features.flashTtl = true;
+        if (f3 & FEATURE3_VIDEO_AF) features.videoAf = true;
+        if (f3 & FEATURE3_AWB_LEARN) features.awbLearn = true;
+        if (f3 & FEATURE3_MOVIE_EXPOSURE) features.movieExposure = true;
         if (f3 & FEATURE3_RATIO_SHADE) {
           if (count === 0) return null;
           features.ratioShade = true;
@@ -258,9 +300,28 @@ function parseRecord(rtos: Uint8Array): ParsedRecord | null {
           if (isCameraGrid(grid)) return null;
           features.customGrid = grid;
         }
+        const f4 = p < rec.length ? rec[p] : 0;
+        if (f4 !== 0) {
+          p++;
+          if ((f4 & ~(FEATURE4_CONSTANT_LIGHT | FEATURE4_SENSOR_SHIFT | FEATURE4_MOVIE_4K | FEATURE4_MOVIE_SR | FEATURE4_FRAMING | FEATURE4_DISTANCE_FEET)) !== 0) return null;
+          if (f4 & FEATURE4_CONSTANT_LIGHT) features.constantLight = true;
+          if (f4 & FEATURE4_SENSOR_SHIFT) features.sensorShift = true;
+          if (f4 & FEATURE4_MOVIE_4K) features.movie4k = true;
+          if (f4 & FEATURE4_MOVIE_SR) features.movieSr = true;
+          if (f4 & FEATURE4_DISTANCE_FEET) features.distanceFeet = true;
+          if (f4 & FEATURE4_FRAMING) {
+            if (p + 2 > rec.length || features.customGrid) return null;
+            const n = rec[p] | (rec[p + 1] << 8);
+            if (p + 2 + n > rec.length) return null;
+            const g = decodeFramingGuides(rec.slice(p + 2, p + 2 + n));
+            if (!g || framingValues(g).length === 0) return null;
+            features.framing = g;
+            p += 2 + n;
+          }
+        } else if (f3 === 0) return null;
       }
     }
-    if (count === 0 && !features.adjSoftFocus && !features.dateStamp && !features.monoUnlock && !features.guard && extraSlots === 0 && shutdownPictures === 0 && !features.lookLayout && !features.directFlash && !features.hdrGainMap && !features.adjSlots && !features.exposurePreview && !features.brightAuto && !features.batteryPercent && !features.customGrid) return null;
+    if (count === 0 && !features.adjSoftFocus && !features.dateStamp && !features.monoUnlock && !features.guard && extraSlots === 0 && shutdownPictures === 0 && !features.lookLayout && !features.directFlash && !features.hdrGainMap && !features.adjSlots && !features.exposurePreview && !features.brightAuto && !features.batteryPercent && !features.customGrid && !features.framing && !features.shadowLearn && !features.filmGrain && !features.flashTtl && !features.videoAf && !features.awbLearn && !features.movieExposure && !features.sensorShift && !features.movie4k && !features.movieSr && !features.constantLight && !features.distanceFeet) return null;
   }
   for (; p < rec.length; p++) if (rec[p] !== 0) return null;
   return { specs: out, features, extraSlots, shutdownPictures };

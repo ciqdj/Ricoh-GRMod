@@ -1,3 +1,4 @@
+import { framingValues } from '@grmod/core';
 import { card } from '@grmod/core';
 import type { FirmwareSummary } from '@grmod/core';
 import { engine, EngineError } from '../engine';
@@ -163,9 +164,21 @@ export function describeCopy(summary: FirmwareSummary, s: State = state): string
   if (summary.directFlash) lines.push(t('flashLine'));
   if (summary.hdrGainMap) lines.push(t('hdrLine'));
   if (summary.exposurePreview) lines.push(t(summary.directFlash ? 'previewLine' : 'previewLineNoFlash'));
+  if (summary.shadowLearn) lines.push(t('shadowLine'));
+  if (summary.filmGrain) lines.push(t('grainLine'));
+  if (summary.flashTtl) lines.push(t('flashTtlLine'));
+  if (summary.videoAf) lines.push(t('videoAfLine'));
+  if (summary.awbLearn) lines.push(t('awbLine'));
+  if (summary.movieExposure) lines.push(t('movieExpLine'));
+  if (summary.constantLight) lines.push(t('lampLine'));
+  if (summary.sensorShift) lines.push(t('shiftLine'));
+  if (summary.movie4k) lines.push(t('movie4kLine'));
+  if (summary.movieSr) lines.push(t('movieSrLine'));
+  if (summary.distanceFeet) lines.push(t('unitsLine'));
   if (summary.adjSlots) lines.push(t('adjSlotsLine', { n: summary.adjSlots }));
   if (summary.batteryPercent) lines.push(t('batteryLine'));
   if (summary.customGrid) lines.push(t('gridLine', { a: gridText(summary.customGrid, 'g3'), b: gridText(summary.customGrid, 'g4') }));
+  if (summary.framing) lines.push(t('framingLine', { n: framingValues(summary.framing).length }));
   if (summary.extraSlots?.length) lines.push(t('extraLine', { n: summary.extraSlots.length, l: summary.extraSlots.map((x) => x.name).join(' / ') }));
   if (summary.lookLayout) lines.push(t('lookOrderLine', { n: summary.lookLayout.hidden.length }));
   if (summary.shutdownPictures?.length) lines.push(t('wallMenuLine', { n: summary.shutdownPictures.length, l: summary.shutdownPictures.map((p) => p.name).join(' / ') }));

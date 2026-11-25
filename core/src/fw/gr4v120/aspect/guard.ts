@@ -34,6 +34,7 @@
 import { assembleWords, branchTarget, branchWord } from './arm';
 import { FirmwareError } from '../../types';
 import { Patch, expectWord } from './build';
+import { MOVIE_BYTE_OFFSET } from './movie4k';
 import { adr, byRelease } from '../target';
 
 function fail(code: string, message: string): never {
@@ -74,6 +75,10 @@ export interface GuardOptions {
    * is the ADJ lever function 0x15 (so slots may hold it).
    */
   exposurePreview?: boolean;
+  /** Bits of the movie options' byte (`movie4k.ts`: 0x775 of the settings object) that mean something in this build; the others are cleared. */
+  movieBits?: number;
+  /** The last ADJ lever function when Constant Light (`lamp.ts`) or Sensor Shift (`shift.ts`) adds one: 0x15 .. 0x17. */
+  lastAdjFunction?: number;
 }
 
 /** Slots 6..8 (`adjslots.ts`): bytes 0x48D..0x48F of the user settings object, bits 0..4 the function, bits 5..7 of the first the slot last used (1..3: slot 6..8). */
@@ -105,7 +110,8 @@ function fixSource(o: GuardOptions): string {
   });
   if (!o.ratios) lines.push(`ldrb r2,[r0,#${RATIO}]`, 'cmp r2,#3', 'movhi r2,#0', `strbhi r2,[r0,#${RATIO}]`);
   // The last ADJ function: 0x14, 0x15 with exposure preview on the ADJ lever.
-  const last = o.exposurePreview ? 21 : 20;
+  const last = o.lastAdjFunction ?? (o.exposurePreview ? 21 : 20);
+  if (!(last >= 20 && last <= 23)) fail('internal', 'guard: the last ADJ function');
   if (!o.adjSoftFocus) {
     ADJ_SLOTS.forEach((off, i) => {
       lines.push(`ldrb r2,[r0,#${off}]`, 'cmp r2,#10', `beq adjbad${i}`, `cmp r2,#${last}`, `bls adj${i}`, `adjbad${i}:`, 'mov r2,#0', `strb r2,[r0,#${off}]`, `adj${i}:`);
@@ -134,6 +140,10 @@ function fixSource(o: GuardOptions): string {
   }
   if (o.hdr) lines.push(`ldrb r2,[r0,#${HDR_SWITCH}]`, 'cmp r2,#1', 'movhi r2,#0', `strbhi r2,[r0,#${HDR_SWITCH}]`);
   if (o.exposurePreview) lines.push(`ldrb r2,[r0,#${EXPOSURE_PREVIEW}]`, 'cmp r2,#2', 'movhi r2,#0', `strbhi r2,[r0,#${EXPOSURE_PREVIEW}]`);
+  if (o.movieBits !== undefined) {
+    if (!(Number.isInteger(o.movieBits) && o.movieBits > 0 && o.movieBits < 4)) fail('internal', 'guard: the movie options');
+    lines.push(`ldrb r2,[r0,#${MOVIE_BYTE_OFFSET}]`, `and r2,r2,#${o.movieBits}`, `strb r2,[r0,#${MOVIE_BYTE_OFFSET}]`);
+  }
   lines.push('bx lr');
   return lines.join(';');
 }

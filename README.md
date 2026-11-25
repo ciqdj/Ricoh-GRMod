@@ -7,8 +7,9 @@ Customize your Ricoh GR with your own Image Control presets, aspect ratios, and 
 > GR Mod is an independent, open-source project. It is not a Ricoh product.
 
 <p align="center">
-  <img src="docs/images/mobile-overview-en.png" width="48%" alt="GR Mod on iPhone, iPad and Android">
-  <img src="docs/images/download-guide-en.png" width="48%" alt="Download GR Mod for desktop and Android from GitHub, or for iPhone and iPad from the App Store">
+  <img src="docs/images/mobile-overview-en.png" width="32%" alt="GR Mod on iPhone, iPad and Android">
+  <img src="docs/images/whats-new-0.8.14-0.9.1-en.jpg" width="32%" alt="What's new in GR Mod from 0.8.14 to 0.9.1">
+  <img src="docs/images/download-guide-en.png" width="32%" alt="Download GR Mod for desktop and Android from GitHub, or for iPhone and iPad from the App Store">
 </p>
 
 ## Download
@@ -41,17 +42,27 @@ Use only firmware intended for your camera model and a base version listed above
 ## Features
 
 - **Image Control presets:** add your own looks from `.cube` LUTs or `.xmp` profiles, adjust their parameters, and reorder or hide looks in the camera menu.
-- **Aspect ratios:** add custom ratios alongside the camera's factory options; on the GR IV (firmware 1.11, 1.20 and 1.21) the live view can also show the whole frame with the outside darkened.
+- **Aspect ratios:** add custom ratios alongside the camera's factory options; on the GR IV (firmware 1.11, 1.20 and 1.21) the live view can also show the whole frame with the outside darkened (on 1.20 / 1.21 how bright is chosen in the camera menu Matte Brightness: black, 75 %, 50 %, 25 % or none; movie mode shows the plain picture).
 - **Power-off images:** add your own End Screen pictures and choose between them in the camera.
 - **Soft focus and halation:** create softer images and red or white highlight effects.
 - **Date imprint:** add a shooting date, date and time, and optionally the Image Control name to JPEGs.
 - **Monochrome looks:** use supported GR IV Monochrome looks on colour GR IV models.
-- **Direct Flash:** use guide-number-based flash exposure on supported GR IV firmware.
+- **Flash enhancements:** Direct Flash (guide-number-based flash exposure) and, on GR IV 1.20 / 1.21, pre-flash (TTL) metering for a GF-2 in the two red-eye flash modes.
 - **HDR gain maps:** create JPEGs with brighter highlights on compatible HDR displays.
 - **More ADJ options:** add ADJ lever slots on supported GR IV firmware.
 - **Battery percentage:** show the charge as a number in steps of 10 % instead of bars, on the GR IV (firmware 1.11, 1.20 and 1.21).
 - **Exposure preview and display options:** access additional preview and automatic screen-brightness settings on supported GR IV firmware.
-- **Custom grid lines:** choose which lines the camera's 3x3 and 4x4 grids draw, on the GR IV (firmware 1.11, 1.20 and 1.21).
+- **Shadow Correction, learned Auto:** Auto lifts the shadows by an amount estimated from the scene, on the GR IV (firmware 1.11, 1.20 and 1.21).
+- **Film grain:** an optimized film grain in place of the camera's Grain Effect, on GR IV 1.20 / 1.21.
+- **Phase Detect AF for Video:** while recording, the sensor's phase data drives the lens, with less focus hunting, on GR IV 1.20 / 1.21.
+- **Exposure Control in Video Mode:** movies are recorded in the mode dial's exposure mode (P / Av / Tv / M) instead of always in P, with aperture, shutter speed and ISO shown and adjustable, on GR IV 1.20 / 1.21.
+- **4K Video:** the movie menu's Framerate becomes Framerate / Resolution; 4K (3840×2160) at 30p and 24p, on GR IV 1.20 / 1.21.
+- **Sensor-Shift SR in Video Mode:** Movie SR offers Off, Mechanical (sensor shift) and Electronic; Off and Mechanical record the whole picture without the electronic shake reduction's crop, on GR IV 1.20 / 1.21.
+- **Learned auto white balance:** Auto, Warmth Priority and White Priority estimate the light with a learned model, on GR IV 1.20 / 1.21.
+- **Constant Light:** keeps the AF assist lamp lit, switched in the shooting menu, in ADJ mode or by an Fn button, on GR IV 1.20 / 1.21.
+- **Sensor Shift:** shift and turn the sensor by hand with the shake reduction unit to fine-tune the framing, from ADJ mode, the Fn button or the held Movie button, on GR IV 1.20 / 1.21.
+- **Distance unit:** Snap Focus Distance and the manual focus scale in feet (and inches) instead of metres, on GR IV 1.20 / 1.21.
+- **Custom grid lines:** choose which lines a 3x3 and a 4x4 grid draw, on the GR IV (firmware 1.11, 1.20 and 1.21; on 1.20 / 1.21 they are extra values of the camera's Grid Style list, next to its own).
 
 Features vary by camera model and firmware version. The app only offers options supported by the selected firmware.
 

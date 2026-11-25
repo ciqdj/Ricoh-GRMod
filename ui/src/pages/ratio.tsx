@@ -45,8 +45,10 @@ function RatioPane({ r }: { r?: RatioItem }) {
   const rev = useStore((s) => s.photoRev);
   const backdrop = useStore((s) => s.ratioBackdrop);
   // With the live-view shade the camera darkens the outside (black at 50 % or grey at 25 %); the preview does the same.
-  const shade = useStore((s) => s.ratioShade && !!s.info?.features.ratioShade);
-  const tone = useStore((s) => s.ratioShadeTone);
+  // GR IV 1.20 / 1.21: always, as bright as chosen in the camera (Matte Brightness); the preview shows its default, 75 %.
+  const menu = useStore((s) => !!s.info?.features.shadeMenu);
+  const shade = useStore((s) => (s.ratioShade || menu) && !!s.info?.features.ratioShade);
+  const tone = useStore((s) => (menu ? 'level-75' : `tone-${s.ratioShadeTone}`));
   const photo = useMemo(() => previewPhoto(), [rev]); // eslint-disable-line react-hooks/exhaustive-deps
   const ref = useRef<HTMLCanvasElement>(null);
   const showPhoto = backdrop === 'photo' && !!photo;
@@ -67,7 +69,7 @@ function RatioPane({ r }: { r?: RatioItem }) {
         <Segmented tour="ratio-backdrop" value={backdrop} onChange={setRatioBackdrop} options={[{ value: 'photo', label: t('previewPhoto') }, { value: 'gray', label: t('ratioGray') }]} />
       </div>
       <div className="ratio-body" data-tour="ratio-frame" data-tour-fit="">
-        <div className={`ratio-frame ${showPhoto ? '' : 'gray'} ${shade ? `live-shade tone-${tone}` : ''}`}>
+        <div className={`ratio-frame ${showPhoto ? '' : 'gray'} ${shade ? `live-shade ${tone}` : ''}`}>
           {showPhoto && <canvas ref={ref} className="ratio-photo" />}
           {sc && (
             <>
@@ -100,6 +102,7 @@ export function RatioPage() {
   const used = new Set(ratios.map((r) => r.ratio.trim()));
   const shadeOk = !!info?.features.ratioShade;
   const live = useStore((s) => liveViewOf(s));
+  const shadeMenu = !!info?.features.shadeMenu;
   return (
     <DropZone className="page" accept={isFirmware} onFiles={(f) => { void loadFirmwareFile(f[0]); }}>
       <header className="page-head">
@@ -125,7 +128,10 @@ export function RatioPage() {
                 </div>
               </div>
             )}
-            {shadeOk && (
+            {shadeOk && shadeMenu && (
+              <p className="ratio-live muted small" data-tour="ratio-live">{t('ratioLiveMenuTip')}</p>
+            )}
+            {shadeOk && !shadeMenu && (
               <div className="ratio-live" data-tour="ratio-live">
                 <span className="muted small">{t('ratioLive')}</span>
                 <Segmented<LiveView> value={live} onChange={setLiveView}
